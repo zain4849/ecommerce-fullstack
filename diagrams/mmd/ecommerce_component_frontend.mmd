@@ -1,0 +1,14 @@
+%%{init: {'theme': 'neutral'}}%%
+    graph TD
+      A[App Router] --> B[Navbar]
+      A --> C[Home Page]
+      A --> D[Product Page]
+      A --> E[Cart Page]
+      A --> F[Auth Pages]
+      A --> G[Orders Page]
+
+      C -->|Lists| H[ProductCard Component]
+      D -->|Shows| I[ProductDetail Component]
+      E -->|Uses| J[CartItem Component]
+      F -->|Forms| K[Login/Register Form]
+      G -->|Lists| L[OrderCard Component]

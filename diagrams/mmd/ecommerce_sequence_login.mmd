@@ -1,0 +1,9 @@
+%%{init: {'theme': 'neutral'}}%%
+    sequenceDiagram
+    Customer->>Frontend: Submit login form
+    Frontend->>Backend: POST /api/auth/login
+    Backend->>DB: Verify user credentials
+    DB-->>Backend: User found
+    Backend-->>Frontend: JWT Token + User Info
+    Frontend->>LocalStorage: Save Token
+    Frontend-->>Customer: Redirect to dashboard

@@ -1,0 +1,17 @@
+%%{init: {'theme': 'neutral'}}%%
+    sequenceDiagram
+    Customer->>Frontend: Add item to cart
+    Frontend->>Backend: POST /api/cart
+    Backend->>DB: Save cart item
+    DB-->>Backend: Success
+    Backend-->>Frontend: Cart updated
+    Customer->>Frontend: Proceed to checkout
+    Frontend->>Backend: POST /api/orders
+    Backend->>Stripe: Create PaymentIntent
+    Stripe-->>Backend: clientSecret
+    Backend-->>Frontend: clientSecret
+    Frontend->>Stripe: Confirm Payment
+    Stripe-->>Frontend: Payment Success
+    Frontend->>Backend: Notify payment success
+    Backend->>DB: Update order as paid
+    Backend-->>Frontend: Order confirmed
