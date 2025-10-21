@@ -10,7 +10,7 @@ import React, { useContext, useState } from "react";
 const Checkout = () => {
   const { items, clearCart } = useCart();
   const { user } = useAuth();
-  const { router } = useRouter();
+  const router  = useRouter();
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
   const [country, setCountry] = useState("");
