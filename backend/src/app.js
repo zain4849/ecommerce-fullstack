@@ -4,24 +4,38 @@ import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import dotenv from "dotenv";
-// import productRoutes from "./routes/productRoutes.js";
-// import authRoutes from "./routes/authRoutes.js";
+import productRoutes from "./routes/productRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
+import cartRoutes from "./routes/cartRoutes.js";
 
+// dotenv.config({ path: './backend/.env' });
 dotenv.config();
 
 const app = express();
 
 // Middleware
-app.use(express.json());
-app.use(cors());
+app.use(express.json()); // converts incoming json bodies to objects
+app.use(cors()); 
+/*
+DEFAULT
+{
+  origin: "*",                     // Allow requests from ANY origin
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  preflightContinue: false,
+  optionsSuccessStatus: 204
+}
+*/
 app.use(helmet());
 app.use(morgan("dev"));
+app.use("/api/auth", authRoutes)
+app.use("/api/products", productRoutes)
+app.use("/api/cart", cartRoutes)
 // app.use("/api/products", productRoutes);
 // app.use("/api/auth", authRoutes)
 // Routes placeholder
-app.get("/", (req, res) => {
-  res.send("Ecommerce API running");
-});
+// app.get("/", (req, res) => {
+//   res.send("Ecommerce API running");
+// });
 
 if (!process.env.MONGO_URI) {
   console.warn("Warning: MONGO_URI is not set. DB connection will fail.");

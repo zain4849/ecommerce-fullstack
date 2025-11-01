@@ -28,7 +28,7 @@ export default function ProductListPage() {
                     <div>
                         <img src={p.imageUrl} alt={p.name} />
                         <h1>{p.name}</h1>
-                        <p>${p.price.toFixed(2)}</p>
+                        <p><svg className='w-2 h-2'><path d='../public/UAE_Dirham_Symbol.svg'></path></svg>{p.price.toFixed(2)}</p>
                     </div>
                 </Link>
             ))}

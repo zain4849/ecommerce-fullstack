@@ -15,7 +15,7 @@ const router = express.Router();
 
 // Public
 router.get("/", getProducts);
-router.get("/:id", getProducts);
+router.get("/:id", getProduct);
 
 // Admin
 router.post("/", authMiddleware, adminMiddleware, createProduct);
