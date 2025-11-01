@@ -1,5 +1,8 @@
 import mongoose from "mongoose";
 
+
+// The _id field is already the primary key, even though you don’t see it in your schema.
+// You can’t replace the _id field as the primary key (MongoDB requires that).
 const userSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
