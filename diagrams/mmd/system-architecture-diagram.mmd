@@ -1,0 +1,40 @@
+graph TD
+    A[Client Browser] --> B[Next.js Frontend]
+
+    subgraph Frontend [Frontend Next.js + React]
+        B1[Pages & Components]
+        B2[Context Providers Auth Cart]
+        B3[API Service Axios]
+        B --> B1
+        B --> B2
+        B --> B3
+    end
+
+    B3 --> C[Node.js + Express Backend]
+
+    subgraph Backend [Backend Node.js + Express]
+        C1[Routes]
+        C2[Controllers]
+        C3[Services]
+        C4[Models]
+        C5[Middleware JWT Validation]
+        C6[Stripe Payment Gateway]
+        C --> C1 --> C2 --> C3 --> C4
+        C2 --> C5
+        C3 --> C6
+    end
+
+    C4 --> D[(MongoDB Atlas)]
+
+    subgraph Database [MongoDB Atlas]
+        D1[(Users)]
+        D2[(Products)]
+        D3[(Orders)]
+        D4[(Reviews)]
+        D5[(Cart)]
+        D --> D1
+        D --> D2
+        D --> D3
+        D --> D4
+        D --> D5
+    end
