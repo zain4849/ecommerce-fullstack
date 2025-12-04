@@ -17,9 +17,11 @@ const router = express.Router();
 router.get("/", getProducts);
 router.get("/:id", getProduct);
 
+router.use(authMiddleware, adminMiddleware)
+
 // Admin
-router.post("/", authMiddleware, adminMiddleware, createProduct);
-router.put("/:id", authMiddleware, adminMiddleware, updateProduct);
-router.delete("/:id", authMiddleware, adminMiddleware, deleteProduct);
+router.post("/", createProduct);
+router.put("/:id", updateProduct);
+router.delete("/:id", deleteProduct);
 
 export default router;

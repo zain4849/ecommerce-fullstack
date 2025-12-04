@@ -5,7 +5,7 @@ import { useCart } from "../../context/CartContext";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
-export default function CartPage() {
+export default function CartPage({isBlur}) {
   const { items, removeItem, clearCart } = useCart();
 
   const total = items.reduce((sum, i) => sum + i.product.price * i.quantity, 0);
@@ -17,7 +17,7 @@ export default function CartPage() {
       <h1 className="mb-4 text-2xl font-bold">Shopping Cart</h1>
       <ul className="space-y-4">
         {items.map((i) => ( 
-          <li key={i.product.id} className="flex justify-between items-center border-b pb-2">
+          <li key={i.product._id} className="flex justify-between items-center border-b pb-2">
             <div>
               <p className="font-semibold">{i.product.name}</p>
               <p className="text-sm text-gray-500">
@@ -26,7 +26,7 @@ export default function CartPage() {
             </div>
             <Button
               variant="destructive"
-              onClick={() => removeItem(i.product.id)}
+              onClick={() => removeItem(i.product._id)}
             >
               Remove
             </Button>

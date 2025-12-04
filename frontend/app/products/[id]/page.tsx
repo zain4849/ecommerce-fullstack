@@ -5,10 +5,12 @@ import { useParams } from "next/navigation";
 import api from "@/lib/api";
 import { Product } from "@/types/product";
 import { Button } from "@/components/ui/button";
-import { useCart } from "@/app/cart/layout";
+import { useCart } from "@/context/CartContext";
+import useBlur from "@/context/BlurContext";
 
 export default function ProductDetailPage() {
   const {addItem} = useCart()
+  const {isBlur} = useBlur()
 
   // When i visit route /products/123, param.id = 123
   const params = useParams() // params = { id: "123" }
@@ -28,7 +30,7 @@ export default function ProductDetailPage() {
 
   return (
     <div className=" p-6 max-w-3xl mx-auto">
-      <img src="" alt="" />
+      <img src={product.images} alt={product.name} className="w-full h-60 object-cover rounded" /> 
       <h1  className="mt-4 font-bold text-2xl">{product?.name}</h1>
       <p className="mt-2 text-gray-700">{product?.description}</p>
       <p className="mt-4 font-semibold text-xl">{product?.price}</p>

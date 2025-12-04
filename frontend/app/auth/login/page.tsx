@@ -34,6 +34,7 @@ export default function Login() {
         <Input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
         <Input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
         <Button type="submit" className="w-full">Login</Button>
+        <p className="text-center">Dont have an account? <Link className="text-cyan-600 font-sm" href='/auth/register'>Register</Link></p>
       </form>
     </div>
   );

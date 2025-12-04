@@ -3,37 +3,136 @@
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
-import { Button } from "./ui/button";
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import useBlur from "@/context/BlurContext";
+import { useEffect } from "react";
 
 export default function NavBar() {
   const { items } = useCart();
   const { user, logout } = useAuth();
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   return (
-    <header className="shadow bg-white">
+    <header className="shadow bg-foreground py-2 px-5 text-white">
       <nav className="container flex justify-between items-center mx-auto">
+        {/* Logo */}
         <Link href="/" className="font-bold text-xl">
           Shop
         </Link>
-        <div className=""> {/* space-x-8 */}
-          {user ? (
-            <>
-              <span>{user.email}</span>
-              <Button onClick={logout}>Logout</Button>
-            </>
-          ) : (
-            <>
-              <Link href="/auth/login" className={cn("px-3 py-2 inline-block hover:bg-gray-200", pathname === "/auth/login" ? "bg-gray-900 text-white": "")}>Login</Link>
-              <Link href="/auth/register" className={cn("px-3 py-2 inline-block hover:bg-gray-200", pathname === "/auth/register" ? "bg-gray-900 text-white": "")}>Register</Link>
-            </>
-          )}
-          <Link href="/cart" className={cn("px-3 py-2 inline-block hover:bg-gray-200", pathname === "/cart" ? "bg-gray-900 text-white": "")}>Cart ({items.length})</Link>
-          {/* <Link href="/products">Products</Link> */}
+
+        {/* Right section */}
+        <div className="flex items-center space-x-3">
+          {/* Avatar dropdown - always visible */}
+          <UserMenu user={user} onLogout={logout} />
+
+          {/* Cart link */}
+          <Link
+            href="/cart"
+            className={cn(
+              "px-3 py-2 inline-block rounded-md text-sm font-medium hover:bg-gray-900",
+              pathname === "/cart" ? "bg-gray-900 text-white hover:bg-gray-700" : ""
+            )}
+          >
+            Cart ({items.length})
+          </Link>
         </div>
       </nav>
     </header>
+  );
+}
+
+/**
+ * 🧍 User Menu Dropdown Component
+ */
+function UserMenu({ user, onLogout }) {
+  const {isBlur, setIsBlur} = useBlur()
+  console.log("isBlur:", isBlur); // 🧭 watch if it changes
+
+
+  useEffect(() => {
+    console.log('isBlur:', isBlur)
+  },[isBlur])
+
+  // You can use a fallback avatar if no image available
+  const avatarSrc =
+    user?.image ||
+    (user?.email
+      ? `https://ui-avatars.com/api/?name=${encodeURIComponent(user.email)}`
+      : "https://ui-avatars.com/api/?name=Guest");
+
+  return (
+    <DropdownMenu onOpenChange={() => setIsBlur(prev => !prev)}>
+
+      <DropdownMenuTrigger asChild>
+        {/* <Avatar className="h-9 w-9 cursor-pointer ring-1 ring-gray-200">
+          <AvatarImage src={avatarSrc} alt={user?.email || "Guest"} />
+          <AvatarFallback>
+            {user?.email?.[0]?.toUpperCase() || "G"}
+          </AvatarFallback>
+        </Avatar> */}
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          className="size-6 cursor-pointer"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
+          />
+        </svg>
+      </DropdownMenuTrigger>
+
+      <DropdownMenuContent align="end" className="w-48">
+        {user ? (
+          <>
+            <DropdownMenuLabel>{user.email}</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              <Link href="/profile">My Profile</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href="/orders">My Orders</Link>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={onLogout}
+              className="text-red-600 focus:text-red-600"
+            >
+              Logout
+            </DropdownMenuItem>
+          </>
+        ) : (
+          <>
+            {/* <DropdownMenuLabel>Welcome, Guest</DropdownMenuLabel> */}
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              <Link
+                href="/auth/login"
+                className="cursor-pointer justify-center font-semibold"
+              >
+                Login / Sign Up
+              </Link>
+            </DropdownMenuItem>
+            {/* <DropdownMenuItem asChild className="cursor-pointer">
+              <Link href="/auth/register">Sign Up</Link>
+            </DropdownMenuItem> */}
+          </>
+        )}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

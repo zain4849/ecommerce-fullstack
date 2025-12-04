@@ -16,7 +16,6 @@ export const authMiddleware = (req, res, next) => {
     next()
   } catch (err) {
     console.log('no jwt');
-    
     res.status(401).json({ error: "Invalid token" })
   }
 };

@@ -1,93 +1,61 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { useAuth } from "@/context/AuthContext";
-import CartProvider, { useCart } from "@/context/CartContext";
+import { Elements } from "@stripe/react-stripe-js";
+import { stripePromise } from "@/lib/stripe";
+import CheckoutForm from "@/components/CheckoutForm";
+import { useEffect, useState } from "react";
+import axios from "axios";
 import api from "@/lib/api";
-import { useRouter } from "next/router";
-import React, { useContext, useState } from "react";
 
-const Checkout = () => {
-  const { items, clearCart } = useCart();
-  const { user } = useAuth();
-  const router  = useRouter();
-  const [address, setAddress] = useState("");
-  const [city, setCity] = useState("");
-  const [country, setCountry] = useState("");
-  const [loading, setLoading] = useState(false);
 
-  const total = items.reduce((sum, i) => sum + i.product.price * i.quantity, 0);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    // Check if user exists
-    if (!user) {
-      router.push("/auth/login");
-      return;
-    }
+export default function CheckoutPage() {
+  const [clientSecret, setClientSecret] = useState(null);
 
-    // Create Order and send to backend
-    try {
-      setLoading(true);
-      const orderData = {
-        items: items.map((i) => ({
-          productId: i.product.id,
-          quantity: i.quantity,
-        })),
-        shippingAddress: { address, city, country },
-        /*
-        We're destructuring state vars into into an object, under the hood looks like:
+  useEffect(() => {
+    // Call backend to create PaymentIntent when user visits checkout
+    const createPaymentIntent = async () => {
+      await api
+        .post("/orders", {
+          /* pass cart items if needed */
+        })
+        .then((res) => setClientSecret(res.data.clientSecret))
+        .catch(console.error);
+    };
+    // fetch("/api/orders", {
+    //   method: "POST",
+    //   headers: { "Content-Type": "application/json" },
+    //   body: JSON.stringify({
+    //     /* pass cart items if needed */
+    //   }),
+    // })
+    //   .then((res) => res.json())
+    //   .then((data) => setClientSecret(data.clientSecret))
+    //   .catch(console.error);
+    createPaymentIntent();
+  }, []);
 
-        shippingAddress: {
-            address: address,
-            city: city,
-            country: country
-        }
-        */
-        total,
-      };
-
-      const res = await api.post("/orders", orderData);
-      clearCart();
-    } catch (error: any) {
-      throw new Error(error.response?.data?.error || "Checkout Failed");
-    } finally {
-        setLoading(false)
-    }
+  const options = {
+    clientSecret,
+    appearance: {
+      theme: "stripe",
+      labels: "floating",
+    },
   };
 
-  if (items.length === 0)
-    return <p className="mt-10 text-center">No items added yet.</p>;
+  if (!clientSecret) return <p>Loading payment...</p>
 
   return (
-    <div>
-      <h1>Checkout</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Address</label>
-          <input
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            type="text"
-          />
-        </div>
-        <div>
-          <label>City</label>
-          <input onChange={(e) => setCity(e.target.value)} type="text" />
-        </div>
-        <div>
-          <label>Country</label>
-          <input onChange={(e) => setCountry(e.target.value)} type="text" />
-        </div>
-        <div>
-          <p>Total: {total}</p>
-        </div>
-        <Button type="submit" disabled={loading}>
-          {loading ? "Processing ..." : "Proceed"}
-        </Button>
-      </form>
+    <div className="container mx-auto py-12">
+      <h1 className="text-2xl font-semibold mb-4">Checkout</h1>
+
+      {clientSecret ? (
+        <Elements options={options} stripe={stripePromise}>
+          <CheckoutForm />
+        </Elements>
+      ) : (
+        <p>Loading payment form...</p>
+      )}
     </div>
   );
-};
-
-export default Checkout;
+}

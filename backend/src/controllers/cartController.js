@@ -19,9 +19,9 @@ export const getCart = async (req, res) => {
   // req.user gets added in authMiddleware.js
   // “Find the cart that belongs to the currently logged-in user.”
   try {
-    //
+    // 
     const cart = await Cart.findOne({ userId: req.user.id }).populate(
-      "items.productId"
+  "items.productId"
     ); // The .populate() method is what uses that ref: "Product" info to automatically fetch the full product details from the Product collection.
     if (!cart) return res.json({ Items: [] });
     res.json(cart);

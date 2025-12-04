@@ -3,6 +3,8 @@ import Product from '../models/Product.js'
 export const getProducts = async (req, res) => {
     try {
         const products = await Product.find() // Blocks the rest of this function's statements from running until complete, the rest of async functions in this file can run before products get resolved value of Promise
+        console.log(products[0]);
+        
         res.json(products)
     } catch (err) {
         res.status(500).json({error: err.message})
@@ -43,6 +45,7 @@ export const updateProduct = async (req, res) => {
     }
 
 }
+
 
 export const deleteProduct = async (req, res) => {
     try {

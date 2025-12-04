@@ -1,17 +1,28 @@
+import "dotenv/config";
+
+
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
-import dotenv from "dotenv";
 import productRoutes from "./routes/productRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import cartRoutes from "./routes/cartRoutes.js";
+import orderRoutes from "./routes/orderRoutes.js";
+import handleStripeWebhook from "./controllers/stripeControlller.js";
+
 
 // dotenv.config({ path: './backend/.env' });
-dotenv.config();
 
 const app = express();
+
+// Stripe webhook must be registered before express.json() so Express does not consume the raw body
+app.post(
+  "/api/webhook/stripe",
+  express.raw({ type: "application/json" }),
+  handleStripeWebhook
+);
 
 // Middleware
 app.use(express.json()); // converts incoming json bodies to objects
@@ -30,6 +41,7 @@ app.use(morgan("dev"));
 app.use("/api/auth", authRoutes)
 app.use("/api/products", productRoutes)
 app.use("/api/cart", cartRoutes)
+app.use("/api/orders", orderRoutes)
 // app.use("/api/products", productRoutes);
 // app.use("/api/auth", authRoutes)
 // Routes placeholder
@@ -51,3 +63,4 @@ mongoose
     console.log("MongoDB Connected");
   })
   .catch((err) => console.error(err));
+export default app

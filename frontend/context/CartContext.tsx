@@ -88,11 +88,11 @@ const CartProvider = ({ children }: { children: ReactNode }) => {
     const prevItems = items; // capture current state for rollback, MAINTAIN SYNC w/ backend
 
     setItems((prev) => {
-      const existing = prev.find((i) => product.id === i.product.id);
+      const existing = prev.find((i) => product._id === i.product._id);
 
       if (existing) {
         return prev.map((i) =>
-          i.product.id === product.id ? { ...i, quantity: i.quantity + 1 } : i
+          i.product._id === product._id ? { ...i, quantity: i.quantity + 1 } : i
         );
       }
 
@@ -101,7 +101,7 @@ const CartProvider = ({ children }: { children: ReactNode }) => {
 
     try {
       console.log(product);
-      await api.post("/cart", { productId: product.id, quantity: 1 });
+      await api.post("/cart", { productId: product._id, quantity: 1 });
     } catch (err) {
       console.error("Failed to add item to cart", err);
       setItems(prevItems); // rollback UI
@@ -111,7 +111,7 @@ const CartProvider = ({ children }: { children: ReactNode }) => {
   const removeItem = async (productId: string) => {
     const prevItems = items; // capture current state for rollback, MAINTAIN SYNC w/ backend
 
-    setItems((prev) => prev.filter((i) => i.product.id !== productId));
+    setItems((prev) => prev.filter((i) => i.product._id !== productId));
 
     try {
       await api.delete(`/cart/${productId}`);
