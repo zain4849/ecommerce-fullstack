@@ -52,7 +52,7 @@
   /* ===== Deep Purple Light Theme ===== */
   --background: #ffffffff;             /* base background */
   --foreground: #212531;             /* primary text */
-  --card: #b7a2c9;                   /* cards / surfaces */
+  --card: #fff;                   /* cards / surfaces */
   --card-foreground: #212531;
   --popover: #b7a2c9;
   --popover-foreground: #212531;

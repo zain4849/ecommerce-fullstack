@@ -10,12 +10,17 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import useBlur from "@/context/BlurContext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Input } from "./ui/input";
+import { Search, ChevronDown } from "lucide-react";
+import { Button } from "./ui/button";
 
 export default function NavBar() {
   const { items } = useCart();
@@ -24,27 +29,40 @@ export default function NavBar() {
 
   return (
     <header className="shadow bg-foreground py-2 px-5 text-white">
-      <nav className="container flex justify-between items-center mx-auto">
+      <nav className="container text-[1rem] flex justify-around items-center mx-auto h-[5.5rem] ">
         {/* Logo */}
-        <Link href="/" className="font-bold text-xl">
+        <Link href="/" className="font-bold text-[1.5rem]">
           Shop
         </Link>
 
+        <div className="relative w-full max-w-[60%]">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            type="search"
+            placeholder="Search products..."
+            className="py-6 pl-13 rounded-[1.15rem] bg-white text-foreground placeholder:text-gray-400"
+          />
+        </div>
+
         {/* Right section */}
         <div className="flex items-center space-x-3">
-          {/* Avatar dropdown - always visible */}
-          <UserMenu user={user} onLogout={logout} />
-
+          <div className="cursor-pointer flex justify-center items-center">
+            <LangDrop />
+            <ChevronDown className="" />
+          </div>
           {/* Cart link */}
           <Link
             href="/cart"
             className={cn(
-              "px-3 py-2 inline-block rounded-md text-sm font-medium hover:bg-gray-900",
-              pathname === "/cart" ? "bg-gray-900 text-white hover:bg-gray-700" : ""
+              "px-3 py-2 inline-block rounded-md hover:bg-gray-900",
+              pathname === "/cart"
+                ? "bg-gray-900 text-white hover:bg-gray-700"
+                : ""
             )}
           >
             Cart ({items.length})
           </Link>
+          <UserDrop user={user} onLogout={logout} />
         </div>
       </nav>
     </header>
@@ -54,14 +72,35 @@ export default function NavBar() {
 /**
  * 🧍 User Menu Dropdown Component
  */
-function UserMenu({ user, onLogout }) {
-  const {isBlur, setIsBlur} = useBlur()
+function LangDrop() {
+  const [language, setLanguage] = useState("English");
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <div className="flex items-center justify-between w-full">
+          <DropdownMenuLabel className="text-[1rem]">{language}</DropdownMenuLabel>
+          {/* Optionally, you could add an icon or arrow here */}
+        </div>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-56 flex flex-col">
+        <DropdownMenuRadioGroup value={language} onValueChange={setLanguage}>
+          <DropdownMenuRadioItem value="English">English</DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="Arabic">Arabic</DropdownMenuRadioItem>
+        </DropdownMenuRadioGroup>
+      </DropdownMenuContent>
+    </DropdownMenu> 
+  );
+}
+
+
+function UserDrop({ user, onLogout }) {
+  const { isBlur, setIsBlur } = useBlur();
   console.log("isBlur:", isBlur); // 🧭 watch if it changes
 
-
   useEffect(() => {
-    console.log('isBlur:', isBlur)
-  },[isBlur])
+    console.log("isBlur:", isBlur);
+  }, [isBlur]);
 
   // You can use a fallback avatar if no image available
   const avatarSrc =
@@ -71,8 +110,7 @@ function UserMenu({ user, onLogout }) {
       : "https://ui-avatars.com/api/?name=Guest");
 
   return (
-    <DropdownMenu onOpenChange={() => setIsBlur(prev => !prev)}>
-
+    <DropdownMenu onOpenChange={() => setIsBlur((prev) => !prev)}>
       <DropdownMenuTrigger asChild>
         {/* <Avatar className="h-9 w-9 cursor-pointer ring-1 ring-gray-200">
           <AvatarImage src={avatarSrc} alt={user?.email || "Guest"} />
@@ -96,7 +134,7 @@ function UserMenu({ user, onLogout }) {
         </svg>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent align="end" className="w-48">
+      <DropdownMenuContent align="" className="w-48">
         {user ? (
           <>
             <DropdownMenuLabel>{user.email}</DropdownMenuLabel>
@@ -118,7 +156,7 @@ function UserMenu({ user, onLogout }) {
         ) : (
           <>
             {/* <DropdownMenuLabel>Welcome, Guest</DropdownMenuLabel> */}
-            <DropdownMenuSeparator />
+            {/* <DropdownMenuSeparator /> */}
             <DropdownMenuItem asChild>
               <Link
                 href="/auth/login"

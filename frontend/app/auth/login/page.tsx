@@ -7,6 +7,7 @@ import Link from "next/link";
 import { AxiosError } from "axios";
 import React from "react";
 import { useAuth } from "@/context/AuthContext";
+import Image from "next/image";
 
 export default function Login() {
   const { login } = useAuth()
@@ -29,12 +30,17 @@ export default function Login() {
 
   return (
     <div>
-      <h1 className="text-xl font-bold mb-4">Login</h1>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <Input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        <Input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        <Button type="submit" className="w-full">Login</Button>
-        <p className="text-center">Dont have an account? <Link className="text-cyan-600 font-sm" href='/auth/register'>Register</Link></p>
+      <h1 className="text-[3.125rem] font-bold mb-8 text-center">Login</h1>
+      <form onSubmit={handleSubmit} className="space-y-7">
+        <Input className="pl-7 py-7 rounded-2xl placeholder:text-muted" type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+        <Input className="pl-7 py-7 rounded-2xl placeholder:text-muted" type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <Button type="submit" className="w-full py-7 rounded-2xl">Login</Button>
+        <p className="text-center text-accent"><b>Or with</b></p>
+        <div className="flex justify-center items-center gap-4">
+          <Image className="cursor-pointer" src="/icon-google.svg" width={25} height={25} alt="Login with Google"/>
+          <Image className="cursor-pointer" src="/icon-github.svg" width={25} height={25} alt="Login with Github"/>
+        </div>
+        <p className="text-center text-foreground font-[50]">Don&apos;t have an account? <Link className="text-accent font-sm" href='/auth/register'>Register</Link></p>
       </form>
     </div>
   );

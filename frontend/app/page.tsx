@@ -14,23 +14,27 @@ import axios from "axios";
 import Link from "next/link";
 // import { getHealth } from "@/lib/test";
 import { useEffect, useState } from "react";
+import Image from "next/image";
+import ProductCarousel from "@/components/ui/ProductCarousel";
 // import { getHealth } from "../lib/api";
 
 export default function Home() {
-  const [products, setProducts] = useState<Product[]>([]);
+  // const [products, setProducts] = useState<Product[]>([]);
   const { addItem } = useCart();
   const [loading, setLoading] = useState(true);
   const { isBlur } = useBlur();
   // const { addItem } = useCart();
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      const res = await api.get("/products");
-      // const data = await res.json();
-      setProducts(res.data.slice(0, 6)); // show only first 6
-    };
-    fetchProducts();
-  }, []);
+  // useEffect(() => {
+  //   const fetchProducts = async () => {
+  //     const res = await api.get("/products");
+  //     // const data = await res.json();
+  //     setProducts(res.data.slice(0, 6)); // show only first 6
+  //   };
+  //   fetchProducts();
+  // }, []);
+
+
 
   return (
     <div className={cn("relative", isBlur ? "blur-[1px]" : "")}>
@@ -46,38 +50,22 @@ export default function Home() {
           </CardContent>
         </Card> */}
       {/* Hero Section */}
-      <HeroCarousel />
+      <section className="min-h-screen">
+        <HeroCarousel />
 
-      {/* Categories */}
-      <h2 className="text-3xl font-black mb-6 text-center">Categories</h2>
-      <CategoryBar />
+        {/* Categories */}
+        <h2 className="text-[3.125rem] font-black mb-12 text-center">
+          Browser by Categories
+        </h2>
+        <CategoryBar />
+      </section>
 
       {/* Featured Products */}
-      <section className="container mx-auto py-12 px-4">
-        <h2 className="text-3xl font-black mb-6 text-center">
+      <section className="container mx-auto py-4 px-4 min-h-screen">
+        <h2 className="text-[3.125rem] font-black mb-12 text-center">
           Featured Products
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-          {products.map((product) => (
-            <div className="border rounded-xl overflow-hidden shadow hover:shadow-lg transition">
-              <Link
-                key={product._id}
-                href={`/products/${product._id}`}
-              >
-                <img
-                  src={product.images}
-                  alt={product.name}
-                  className="w-full h-64 object-cover"
-                />
-                <div className="p-2 px-5">
-                  <h3 className="font-semibold text-lg">{product.name}</h3>
-                  <p className="text-gray-500">${product.price}</p>
-                </div>
-              </Link>
-              <Button className="mb-4 mx-5" onClick={() => addItem(product)}>Add to Cart</Button>
-            </div>
-          ))}
-        </div>
+        <ProductCarousel/>
       </section>
     </div>
   );
