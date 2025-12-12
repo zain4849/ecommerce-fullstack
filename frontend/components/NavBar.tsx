@@ -21,6 +21,7 @@ import { useEffect, useState } from "react";
 import { Input } from "./ui/input";
 import { Search, ChevronDown } from "lucide-react";
 import { Button } from "./ui/button";
+import Image from "next/image";
 
 export default function NavBar() {
   const { items } = useCart();
@@ -32,7 +33,7 @@ export default function NavBar() {
       <nav className="container text-[1rem] flex justify-around items-center mx-auto h-[5.5rem] ">
         {/* Logo */}
         <Link href="/" className="font-bold text-[1.5rem]">
-          Shop
+          ZELECT
         </Link>
 
         <div className="relative w-full max-w-[60%]">
@@ -54,13 +55,23 @@ export default function NavBar() {
           <Link
             href="/cart"
             className={cn(
-              "px-3 py-2 inline-block rounded-md hover:bg-gray-900",
+              "relative px-3 py-2 inline-block rounded-md hover:bg-gray-900",
               pathname === "/cart"
                 ? "bg-gray-900 text-white hover:bg-gray-700"
                 : ""
             )}
           >
-            Cart ({items.length})
+            <Image
+              src="/Shopping_Cart.png"
+              width={25}
+              height={25}
+              alt="Shopping Cart"
+            /> 
+            <div
+              className="absolute top-0 right-0.5 px-0.5 bg-red-600 rounded-full"
+            >
+            {items.length}
+            </div>
           </Link>
           <UserDrop user={user} onLogout={logout} />
         </div>

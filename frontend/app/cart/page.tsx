@@ -4,6 +4,7 @@ import React from "react";
 import { useCart } from "../../context/CartContext";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import CheckoutButton from "@/components/CheckoutButton";
 
 export default function CartPage({isBlur}) {
   const { items, removeItem, clearCart } = useCart();
@@ -40,7 +41,7 @@ export default function CartPage({isBlur}) {
             Clear
           </Button>
           <Link href="checkout">
-            <Button>Checkout</Button>
+            <CheckoutButton cartItems={items}/>
           </Link>
         </div>
       </div>

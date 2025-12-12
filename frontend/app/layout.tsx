@@ -6,6 +6,7 @@ import NavBar from "@/components/NavBar";
 import CartProvider from "@/context/CartContext";
 import { AuthProvider } from "@/context/AuthContext";
 import { BlurProvider } from "@/context/BlurContext";
+import Footer from "@/components/ui/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -45,6 +46,7 @@ export default function RootLayout({
               <main className="w-full">
                 {children}
               </main>
+              <Footer/>
             </BlurProvider>
           </CartProvider>
         </AuthProvider>

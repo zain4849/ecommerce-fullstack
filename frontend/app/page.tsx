@@ -16,6 +16,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import ProductCarousel from "@/components/ui/ProductCarousel";
+import NewArrival from "@/components/NewArrival";
 // import { getHealth } from "../lib/api";
 
 export default function Home() {
@@ -34,8 +35,6 @@ export default function Home() {
   //   fetchProducts();
   // }, []);
 
-
-
   return (
     <div className={cn("relative", isBlur ? "blur-[1px]" : "")}>
       {/* grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 */}
@@ -50,7 +49,7 @@ export default function Home() {
           </CardContent>
         </Card> */}
       {/* Hero Section */}
-      <section className="min-h-screen">
+      <section className="container mx-auto my-2 min-h-screen">
         <HeroCarousel />
 
         {/* Categories */}
@@ -65,8 +64,19 @@ export default function Home() {
         <h2 className="text-[3.125rem] font-black mb-12 text-center">
           Featured Products
         </h2>
-        <ProductCarousel/>
+        <ProductCarousel />
+        <div className="w-full h-[450px] mt-24 bg-cyan-950 rounded-xl overflow-hidden">
+
+        </div>
       </section>
+      <section className="container mx-auto py-4 px-4 min-h-screen">
+        <h2 className="text-[3.125rem] font-black mb-12 text-center">
+          Trending Products
+        </h2>
+        <ProductCarousel />
+        <NewArrival/>
+      </section>
+
     </div>
   );
 }
