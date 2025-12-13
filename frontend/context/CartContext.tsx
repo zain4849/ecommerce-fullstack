@@ -16,9 +16,11 @@ import { log } from "console";
 
 interface CartContextType {
   items: CartItem[];
-  addItem: (product: Product) => void;
-  removeItem: (productId: string) => void;
-  clearCart: () => void;
+  addItem: (product: Product) => Promise<void>;
+  removeItem: (productId: string) => Promise<void>;
+  increaseQuantity: (productId: string) => Promise<void>;
+  decreaseQuantity: (productId: string) => Promise<void>;
+  clearCart: () => Promise<void>;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -74,7 +76,7 @@ const CartProvider = ({ children }: { children: ReactNode }) => {
       }
     };
 
-    fetchCart()
+    fetchCart();
     // Set items to be that
     // Set localStorage to be that, persist accross pages
     // setItems(JSON.parse(saved)), This makes more sense but TS wanna check if saved is null LOL
@@ -118,6 +120,54 @@ const CartProvider = ({ children }: { children: ReactNode }) => {
     } catch (err) {
       console.error("Failed to remove item from cart", err);
       setItems(prevItems); // rollback UI
+    }
+  };
+
+  /* =======================
+     Increase quantity (+)
+     ======================= */
+  const increaseQuantity = async (productId: string) => {
+    const prev = items; // used for catch block
+
+    const item = items.find((i) => i.product._id === productId);
+    if (!item || item.quantity >= item.product.stock) return;
+
+    setItems((prev) =>
+      prev.map((i) =>
+        i.product._id === productId ? { ...i, quantity: i.quantity + 1 } : i
+      )
+    );
+
+    try {
+      await api.patch(`/cart/${productId}`, { delta: 1 }); // this only increases in user's cart, NOT Product stock
+    } catch (err) {
+      console.error("Increase failed", err);
+      setItems(prev);
+    }
+  };
+
+  /* =======================
+     Decrease quantity (-)
+     ======================= */
+  const decreaseQuantity = async (productId: string) => {
+    const prev = items; // used for catch block
+
+    const item = items.find((i) => i.product._id === productId);
+    if (!item) return;
+
+    setItems((prev) =>
+      item.quantity === 1
+        ? prev.filter((i) => i.product._id !== productId)
+        : prev.map((i) =>
+            i.product._id === productId ? { ...i, quantity: i.quantity - 1 } : i
+          )
+    );
+
+    try {
+      await api.patch(`/cart/${productId}`, { delta: -1 }); // this only reduces from user's cart, NOT Product stock
+    } catch (err) {
+      console.error("Decrease failed", err);
+      setItems(prev);
     }
   };
 

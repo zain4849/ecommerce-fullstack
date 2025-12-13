@@ -15,7 +15,7 @@ import Link from "next/link";
 // import { getHealth } from "@/lib/test";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import ProductCarousel from "@/components/ui/ProductCarousel";
+import ProductCarousel from "@/components/ProductCarousel";
 import NewArrival from "@/components/NewArrival";
 // import { getHealth } from "../lib/api";
 
@@ -65,18 +65,15 @@ export default function Home() {
           Featured Products
         </h2>
         <ProductCarousel />
-        <div className="w-full h-[450px] mt-24 bg-cyan-950 rounded-xl overflow-hidden">
-
-        </div>
+        <div className="w-full h-[450px] mt-24 bg-cyan-950 rounded-xl overflow-hidden"></div>
       </section>
       <section className="container mx-auto py-4 px-4 min-h-screen">
         <h2 className="text-[3.125rem] font-black mb-12 text-center">
           Trending Products
         </h2>
         <ProductCarousel />
-        <NewArrival/>
+        <NewArrival />
       </section>
-
     </div>
   );
 }

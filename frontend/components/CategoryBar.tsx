@@ -17,7 +17,7 @@ const CategoryBar = () => {
         <div key={cat.name} className="relative flex flex-col items-center justify-end group cursor-pointer">
 
           <button
-            className="self-end justify-self-end h-20 w-50 bg-accent rounded-[50%] transition group-hover:bg-foreground"
+            className="self-end justify-self-end h-20 w-50  rounded-[50%] transition group-hover:bg-foreground"
           />
 
           <div className="absolute -top-20 w-30 h-30 flex items-center justify-center">

@@ -42,7 +42,7 @@ export function HeroCarousel() {
 
 
   return (
-    <div className="relative w-full mb-25">
+    <div className="relative w-full mb-25 rounded-xl overflow-hidden">
       <Carousel
         setApi={setApi}
         opts={{
