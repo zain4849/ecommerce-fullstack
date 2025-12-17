@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useAuthStore } from "@/store/authStore";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -9,9 +8,12 @@ import { AxiosError } from "axios";
 import React from "react";
 import { useAuth } from "@/context/AuthContext";
 import Image from "next/image";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/store/store";
+import { register } from "@/store/authSlice";
 
 export default function Register() {
-  const { register } = useAuth();
+  const dispatch = useDispatch<AppDispatch>()
   // const loading = useAuthStore((s) => s.loading);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -22,7 +24,7 @@ export default function Register() {
     e.preventDefault();
     setError(""); // clear already displayed error
     try {
-      await register(name, email, password);
+      await dispatch(register({name, email, password})).unwrap();
       window.location.href = "/";
     } catch (error) {
       const err = error as AxiosError<{ error: string }>;
@@ -69,13 +71,7 @@ export default function Register() {
             height={25}
             alt="Login with Google"
           />
-          <Image
-            className="cursor-pointer"
-            src="/icon-github.svg"
-            width={25}
-            height={25}
-            alt="Login with Github"
-          />
+
         </div>
         <p className="text-center text-foreground font-[50]">
           Already have an account?{" "}

@@ -8,9 +8,12 @@ import { AxiosError } from "axios";
 import React from "react";
 import { useAuth } from "@/context/AuthContext";
 import Image from "next/image";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/store/store";
+import { login } from "@/store/authSlice";
 
 export default function Login() {
-  const { login } = useAuth()
+  const dispatch = useDispatch<AppDispatch>() // <> if no async actions, but <AppDispatch> if there are
   // const loading = useAuthStore((s) => s.loading);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,7 +23,8 @@ export default function Login() {
     e.preventDefault();
     setError(""); // clear already displayed error
     try {
-      await login(email, password);
+      // unwrap makes it behave like a real promise, try catch won't throw without it
+      await dispatch(login({email, password})).unwrap();
       window.location.href = "/"; // or router.push("/")
     } catch (error) {
       const err = error as AxiosError<{error: string}>
@@ -38,7 +42,6 @@ export default function Login() {
         <p className="text-center text-accent"><b>Or with</b></p>
         <div className="flex justify-center items-center gap-4">
           <Image className="cursor-pointer" src="/icon-google.svg" width={25} height={25} alt="Login with Google"/>
-          <Image className="cursor-pointer" src="/icon-github.svg" width={25} height={25} alt="Login with Github"/>
         </div>
         <p className="text-center text-foreground font-[50]">Don&apos;t have an account? <Link className="text-accent font-sm" href='/auth/register'>Register</Link></p>
       </form>
