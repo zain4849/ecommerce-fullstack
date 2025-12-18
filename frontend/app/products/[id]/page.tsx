@@ -7,9 +7,12 @@ import { Product } from "@/types/product";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 import useBlur from "@/context/BlurContext";
-import ProductCarousel from "@/components/ProductCarousel";
+import ProductCarousel from "@/components/layout/product/ProductCarousel";
 import Image from "next/image";
 import { FaStar } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/store/store";
+import { addItem, updateQuantity } from "@/store/cartSlice";
 
 const colors = [
   { name: "black", value: "black", class: "bg-black" },
@@ -17,7 +20,8 @@ const colors = [
 ];
 
 export default function ProductDetailPage() {
-  const { addItem, increaseQuantity, decreaseQuantity } = useCart();
+  // const { addItem, increaseQuantity, decreaseQuantity } = useCart();
+  const dispatch = useDispatch<AppDispatch>();
   const { isBlur } = useBlur();
 
   // When i visit route /products/123, param.id = 123
@@ -64,7 +68,7 @@ export default function ProductDetailPage() {
     <div className=" p-6 mx-auto container w-full min-h-[70vh] pt-24">
       <p>
         {" "}
-        Cameras / <b>Canon Camera</b>
+        Cameras / <b>Canon Camera</b> {/*Breadcrumb Navigation*/}
       </p>
       <div className="flex justify-center  gap-36  h-[70vh]">
         <div className="mt-18">
@@ -158,7 +162,11 @@ export default function ProductDetailPage() {
               <Button
                 size="sm"
                 variant="outline"
-                // onClick={() => decreaseQuantity(i.product._id)}
+                onClick={() =>
+                  dispatch(
+                    updateQuantity({ productId: product._id, delta: -1 })
+                  )
+                }
               >
                 −
               </Button>
@@ -168,13 +176,18 @@ export default function ProductDetailPage() {
               <Button
                 size="sm"
                 // variant=""
-                // onClick={() => increaseQuantity(i.product._id)}
+                onClick={() =>
+                  dispatch(updateQuantity({ productId: product._id, delta: 1 }))
+                }
                 // disabled={i.quantity >= i.product.stock}
               >
                 +
               </Button>
             </div>
-            <Button className="mt-12 w-full" onClick={() => addItem(product)}>
+            <Button
+              className="mt-12 w-full"
+              onClick={() => dispatch(addItem(product))}
+            >
               Add To Cart
             </Button>
           </div>

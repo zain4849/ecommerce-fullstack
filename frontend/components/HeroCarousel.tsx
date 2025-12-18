@@ -19,7 +19,7 @@ const slides = [
   },
   {
     id: 2,
-    image: "/banners/winter.jpg",
+    image: "/banners/headset.png",
     title: "Winter Sale",
     subtitle: "Up to 50% off selected items",
   },
@@ -62,12 +62,12 @@ export function HeroCarousel() {
                   className="object-cover"
                   priority
                 />
-                <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-center text-white px-4">
+                {/* <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-center text-white px-4">
                   <h2 className="text-3xl md:text-5xl font-bold">
                     {slide.title}
                   </h2>
                   <p className="mt-2 text-lg md:text-xl">{slide.subtitle}</p>
-                </div>
+                </div> */}
               </div>
             </CarouselItem>
           ))}

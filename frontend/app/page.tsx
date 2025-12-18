@@ -1,11 +1,10 @@
 "use client";
 
 import { HeroCarousel } from "@/components/HeroCarousel";
-import ProductCard from "@/components/ProductCard";
+import ProductCard from "@/components/layout/product/ProductCard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import useBlur from "@/context/BlurContext";
-import { useCart } from "@/context/CartContext";
 import CategoryBar from "@/components/CategoryBar";
 import api from "@/lib/api";
 import { cn } from "@/lib/utils";
@@ -15,16 +14,16 @@ import Link from "next/link";
 // import { getHealth } from "@/lib/test";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import ProductCarousel from "@/components/ProductCarousel";
+import ProductCarousel from "@/components/layout/product/ProductCarousel";
 import NewArrival from "@/components/NewArrival";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/store/store";
 // import { getHealth } from "../lib/api";
 
 export default function Home() {
   // const [products, setProducts] = useState<Product[]>([]);
-  const { addItem } = useCart();
   const [loading, setLoading] = useState(true);
   const { isBlur } = useBlur();
-  // const { addItem } = useCart();
 
   // useEffect(() => {
   //   const fetchProducts = async () => {
@@ -34,6 +33,51 @@ export default function Home() {
   //   };
   //   fetchProducts();
   // }, []);
+
+  const products: Product[] = [
+    {
+      _id: "1",
+      name: "Product 1",
+      price: 29.99,
+      images: "/categories/camera.png",
+      inStock: true,
+    },
+    {
+      _id: "2",
+      name: "Product 2",
+      price: 49.99,
+      images: "/categories/camera.png",
+      inStock: true,
+    },
+    {
+      _id: "3",
+      name: "Product 3",
+      price: 19.99,
+      images: "/categories/camera.png",
+      inStock: true,
+    },
+    {
+      _id: "4",
+      name: "Product 4",
+      price: 39.99,
+      images: "/categories/camera.png",
+      inStock: true,
+    },
+    {
+      _id: "5",
+      name: "Product 5",
+      price: 59.99,
+      images: "/categories/camera.png",
+      inStock: true,
+    },
+    {
+      _id: "6",
+      name: "Product 6",
+      price: 89.99,
+      images: "/categories/camera.png",
+      inStock: true,
+    },
+  ];
 
   return (
     <div className={cn("relative", isBlur ? "blur-[1px]" : "")}>
@@ -64,14 +108,14 @@ export default function Home() {
         <h2 className="text-[3.125rem] font-black mb-12 text-center">
           Featured Products
         </h2>
-        <ProductCarousel />
+        <ProductCarousel products={products} />
         <div className="w-full h-[450px] mt-24 bg-cyan-950 rounded-xl overflow-hidden"></div>
       </section>
       <section className="container mx-auto py-4 px-4 min-h-screen">
         <h2 className="text-[3.125rem] font-black mb-12 text-center">
           Trending Products
         </h2>
-        <ProductCarousel />
+        <ProductCarousel products={products} />
         <NewArrival />
       </section>
     </div>
