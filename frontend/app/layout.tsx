@@ -2,11 +2,13 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Poppins } from "next/font/google";
 import "./globals.css";
-import NavBar from "@/components/NavBar";
+import NavBar from "@/components/layout/navbar/NavBar";
 import CartProvider from "@/context/CartContext";
 import { AuthProvider } from "@/context/AuthContext";
 import { BlurProvider } from "@/context/BlurContext";
-import Footer from "@/components/ui/Footer";
+import Footer from "@/components/layout/Footer";
+import Providers from "./providers";
+import AuthInit from "./AuthInit";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,17 +41,16 @@ export default function RootLayout({
       <body
         className={`antialiased bg-background`}
       >
-        <AuthProvider>
-          <CartProvider>
+        <Providers>
             <BlurProvider>
+              <AuthInit/>
               <NavBar />
               <main className="w-full">
                 {children}
               </main>
               <Footer/>
             </BlurProvider>
-          </CartProvider>
-        </AuthProvider>
+        </Providers>
       </body>
     </html>
   );
