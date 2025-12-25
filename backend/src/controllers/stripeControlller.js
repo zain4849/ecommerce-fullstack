@@ -8,6 +8,9 @@ import Cart from "../models/Cart.js";
 // Webhook to update payment status (Stripe calls this)
 const handleStripeWebhook = async (req, res) => {
   try {
+    if (!stripe) {
+      return res.status(500).json({ error: "Stripe is not configured" });
+    }
     const sig = req.headers["stripe-signature"];
     let event;
     try {
@@ -18,7 +21,7 @@ const handleStripeWebhook = async (req, res) => {
         process.env.STRIPE_WEBHOOK_SECRET
       );
     } catch (err) {
-      console.error("Webhook signature verification falied:", err.message)
+      console.error("Webhook signature verification failed:", err.message)
       return res.status(400).send(`Webhook Error: ${err.message}`)
     }
 
@@ -26,7 +29,7 @@ const handleStripeWebhook = async (req, res) => {
       const paymentIntent = event.data.object;
 
       const session = await Order.db.startSession()
-      session.startTransaction()
+      await session.startTransaction()
       try {
         const order = await Order.findOneAndUpdate(
           {paymentIntentId: paymentIntent.id},
