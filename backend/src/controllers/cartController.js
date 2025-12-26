@@ -23,7 +23,7 @@ export const getCart = async (req, res) => {
     const cart = await Cart.findOne({ userId: req.user.id }).populate(
   "items.productId"
     ); // The .populate() method is what uses that ref: "Product" info to automatically fetch the full product details from the Product collection.
-    if (!cart) return res.json({ Items: [] });
+    if (!cart) return res.json({ items: [] });
     res.json(cart);
   } catch (err) {
     res.status(500).json({ error: err.message });
