@@ -49,11 +49,11 @@ export default function Register() {
   });
 
   const onSubmit = async (data: RegisterFormData) => {
-    console.log(data)
+    console.log("Form submitted with data:", data);
 
     try {
-      // await dispatch(register({ name, email, password })).unwrap();
       await dispatch(register({ name: data.name, email: data.email, password: data.password })).unwrap();
+      console.log("Registration successful, redirecting...");
       window.location.href = "/";
     } catch (error) {
       const err = error as AxiosError<{ error: string }>;
@@ -79,23 +79,27 @@ export default function Register() {
 
         <Input
           className="pl-7 py-7 rounded-2xl placeholder:text-muted"
-          // type="email"
+          type="email"
           placeholder="Email"
-          // value={email}
-          // onChange={(e) => setEmail(e.target.value)}
           {...registerField("email")}
         />
           {errors.email && <p className="text-red-500">{errors.email.message}</p>}
 
         <Input
           className="pl-7 py-7 rounded-2xl placeholder:text-muted"
-          // type="password"
+          type="password"
           placeholder="Password"
-          // value={password}
-          // onChange={(e) => setPassword(e.target.value)}
           {...registerField("password")}
         />
           {errors.password && <p className="text-red-500">{errors.password.message}</p>}
+
+        <Input
+          className="pl-7 py-7 rounded-2xl placeholder:text-muted"
+          type="password"
+          placeholder="Confirm Password"
+          {...registerField("confirmedPassword")}
+        />
+          {errors.confirmedPassword && <p className="text-red-500">{errors.confirmedPassword.message}</p>}
 
         <Button type="submit" className="w-full py-7 rounded-2xl">
           Sign Up

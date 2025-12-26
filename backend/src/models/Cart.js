@@ -6,7 +6,7 @@ const cartSchema = new mongoose.Schema(
     items: [
       {
         // .populate("items.productId") Mongoose looks at your schema, sees that items.productId has ref: "Product", and automatically fetches those product documents.
-        productId: { type: String, ref: "Product", required: true }, // ObjectId type (BSON type)
+        productId: { type: mongoose.Schema.Types.ObjectId, ref: "Product", required: true }, // ObjectId type (BSON type)
         quantity: { type: Number, required: true, min: 1, default: 1 },
       },
     ],

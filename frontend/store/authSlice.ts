@@ -37,7 +37,7 @@ const authSlice = createSlice({
 
       if (user && token) {
         state.token = token;
-        state.token = JSON.parse(user);
+        state.user = JSON.parse(user);
         api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       }
     },
@@ -83,12 +83,29 @@ export const register = createAsyncThunk(
       email,
       password,
     }: { name: string; email: string; password: string },
-    { dispatch }
+    { dispatch, rejectWithValue }
   ) => {
-    await api.post("/auth/register", { name, email, password });
-
-    // reuse login logic
-    await dispatch(login({ email, password }));
+    try {
+      console.log("Registering user:", { name, email });
+      const res = await api.post("/auth/register", { name, email, password });
+      console.log("Registration successful:", res.data);
+      
+      // reuse login logic to automatically log the user in after registration
+      const loginResult = await dispatch(login({ email, password }));
+      
+      if (login.fulfilled.match(loginResult)) {
+        console.log("Auto-login after registration successful");
+      } else {
+        console.error("Auto-login after registration failed");
+      }
+      
+      // Return the registration response data
+      return res.data;
+    } catch (err: any) {
+      console.error("Registration error:", err);
+      // Return error message for the component to handle
+      return rejectWithValue(err.response?.data?.error || err.message || "Registration failed");
+    }
   }
 );
 /* ---------------- EXPORTS ---------------- */
