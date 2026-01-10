@@ -31,7 +31,7 @@ export default function CartPage({ isBlur }) {
   const items: CartItem[] = [
     {
       product: {
-        _id: "1",
+        _id: "690de8c51b6a59f16edd5cd7",
         name: "Product 1",
         price: 29.99,
         images: "/categories/camera.png",
@@ -41,7 +41,7 @@ export default function CartPage({ isBlur }) {
     },
     {
       product: {
-        _id: "2",
+        _id: "690de9211b6a59f16edd5cdb",
         name: "Product 2",
         price: 49.99,
         images: "/categories/camera.png",
@@ -51,7 +51,7 @@ export default function CartPage({ isBlur }) {
     },
     {
       product: {
-        _id: "3",
+        _id: "690df9e6bd377ee62776cb04",
         name: "Product 3",
         price: 19.99,
         images: "/categories/camera.png",
@@ -61,7 +61,7 @@ export default function CartPage({ isBlur }) {
     },
     {
       product: {
-        _id: "4",
+        _id: "64b71c4f5f1c2b3a4d5e6f73",
         name: "Product 4",
         price: 39.99,
         images: "/categories/camera.png",
@@ -71,7 +71,7 @@ export default function CartPage({ isBlur }) {
     },
     {
       product: {
-        _id: "5",
+        _id: "64b71c4f5f1c2b3a4d5e6f74",
         name: "Product 5",
         price: 59.99,
         images: "/categories/camera.png",
@@ -81,7 +81,7 @@ export default function CartPage({ isBlur }) {
     },
     {
       product: {
-        _id: "6",
+        _id: "64b71c4f5f1c2b3a4d5e6f75",
         name: "Product 6",
         price: 89.99,
         images: "/categories/camera.png",

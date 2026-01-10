@@ -1,5 +1,6 @@
 // Express automatically calls cart.toJSON() (or cart.toObject() internally).
 
+import { isValidObjectId } from "mongoose";
 import Cart from "../models/Cart.js";
 import Product from "../models/Product.js";
 
@@ -19,9 +20,9 @@ export const getCart = async (req, res) => {
   // req.user gets added in authMiddleware.js
   // “Find the cart that belongs to the currently logged-in user.”
   try {
-    // 
+    //
     const cart = await Cart.findOne({ userId: req.user.id }).populate(
-  "items.productId"
+      "items.productId"
     ); // The .populate() method is what uses that ref: "Product" info to automatically fetch the full product details from the Product collection.
     if (!cart) return res.json({ items: [] });
     res.json(cart);
@@ -33,13 +34,17 @@ export const getCart = async (req, res) => {
 export const addToCart = async (req, res) => {
   try {
     const { productId, quantity } = req.body;
+    if (!isValidObjectId(productId)) {
+      return res.status(400).json({ error: "Invalid product ID format" });
+    }
+
     console.log("Product model _id type:", Product.schema.path("_id").instance);
     // Find if product exists
     const product = await Product.findById(productId);
     if (!product) return res.status(404).json({ err: "Product Not Found" });
     // Find if cart exists
     let cart = await Cart.findOne({ userId: req.user.id });
-    
+
     if (!cart) {
       cart = await Cart.create({
         userId: req.user.id,
