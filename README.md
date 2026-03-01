@@ -4,6 +4,9 @@ A fullstack ecommerce application built as a learning project to gain real-world
 
 > **Status**: 🚀 In Development
 
+<img width="1460" height="1170" alt="ecommerce" src="https://github.com/user-attachments/assets/60fb46f2-2b60-42d2-88c4-eec6ee1c643e" />
+
+
 ## 📋 Table of Contents
 
 - [Features](#features)
