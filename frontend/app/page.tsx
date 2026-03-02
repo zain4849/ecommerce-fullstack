@@ -1,29 +1,17 @@
 "use client";
 
 import { HeroCarousel } from "@/components/HeroCarousel";
-import ProductCard from "@/components/layout/product/ProductCard";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import useBlur from "@/context/BlurContext";
 import CategoryBar from "@/components/CategoryBar";
-import api from "@/lib/api";
 import { cn } from "@/lib/utils";
 import { Product } from "@/types/product";
-import axios from "axios";
-import Link from "next/link";
-// import { getHealth } from "@/lib/test";
-import { useEffect, useState } from "react";
-import Image from "next/image";
+import { useState } from "react";
 import ProductCarousel from "@/components/layout/product/ProductCarousel";
 import NewArrival from "@/components/NewArrival";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/store/store";
-// import { getHealth } from "../lib/api";
 
 export default function Home() {
   // const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const { isBlur } = useBlur();
+  // const { isBlur } = useBlur();
 
   // useEffect(() => {
   //   const fetchProducts = async () => {
@@ -80,7 +68,8 @@ export default function Home() {
   ];
 
   return (
-    <div className={cn("relative", isBlur ? "blur-[1px]" : "")}>
+    <div> 
+      {/* className={cn("relative", isBlur ? "blur-[1px]" : "")} */}
       {/* grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 */}
       {/* {products.map((product) => (
         <Card key={product.id} className="shadow hover:shadow-lg transition">

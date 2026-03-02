@@ -1,17 +1,15 @@
 "use client";
 
-import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { AxiosError } from "axios";
 import React from "react";
-import { useAuth } from "@/context/AuthContext";
 import Image from "next/image";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store/store";
 import { register } from "@/store/authSlice";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm} from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 

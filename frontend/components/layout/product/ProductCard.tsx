@@ -2,8 +2,6 @@
 
 import { Product } from "@/types/product";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { CarouselItem } from "@/components/ui/carousel";
 import { Card, CardContent } from "../../ui/card";
 import Link from "next/link";
 import { Button } from "../../ui/button";
@@ -11,7 +9,6 @@ import { AppDispatch } from "@/store/store";
 import { useDispatch } from "react-redux";
 import { addItem } from "@/store/cartSlice";
 export default function ProductCard({ product }: { product: Product }) {
-  const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
 
   return (

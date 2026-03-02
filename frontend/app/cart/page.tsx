@@ -12,7 +12,7 @@ import { AppDispatch, RootState } from "@/store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCart } from "@/store/cartSlice";
 
-export default function CartPage({ isBlur }) {
+export default function CartPage() {
   const user = useSelector((state: RootState) => state.auth.user)
   // const items = useSelector((state: RootState) => state.cart.items)
   const dispatch = useDispatch<AppDispatch>();

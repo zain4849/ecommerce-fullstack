@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { AxiosError } from "axios";
 import React from "react";
-import { useAuth } from "@/context/AuthContext";
 import Image from "next/image";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store/store";

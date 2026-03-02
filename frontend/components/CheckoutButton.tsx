@@ -1,7 +1,5 @@
 "use client";
 
-import React, { useState } from "react";
-// import { getStripe } from "@/lib/stripe";
 import { CartItem } from "@/types/cart";
 
 export default function CheckoutButton({ cartItems } : {cartItems: CartItem[]}) {

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import {
   Carousel,
   CarouselContent,
@@ -8,13 +8,8 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import Image from "next/image";
-import Link from "next/link";
-import { Button } from "../../ui/button";
-import { Card, CardContent } from "../../ui/card";
 import ProductCard from "./ProductCard";
 import { Product } from "@/types/product";
-// const [products, setProducts] = useState([]);
 
 const productss: Product[] = [
   {

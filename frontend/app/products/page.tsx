@@ -90,7 +90,7 @@ export default function ProductListPage() {
 
   // Filter and sort products
   const filteredAndSortedProducts = useMemo(() => {
-    let filtered = products.filter((p) => {
+    const filtered = products.filter((p) => {
       const matchesSearch = p.name.toLowerCase().includes(filters.searchQuery.toLowerCase());
       const matchesPrice = p.price >= filters.priceRange[0] && p.price <= filters.priceRange[1];
       const matchesStock = filters.inStock === null || p.inStock === filters.inStock;
@@ -245,7 +245,7 @@ export default function ProductListPage() {
                       {badge && <div className={`absolute top-3 right-3 ${badge.color} text-white text-xs px-3 py-1 rounded-full font-semibold z-10`}>{badge.label}</div>}
                       {originalPrice && <div className="absolute top-3 left-3 bg-red-500 text-white text-xs px-2 py-1 rounded font-semibold">-{discount}%</div>}
                       <Link href={`/products/${p._id}`}>
-                        <Image src={p.images} alt={p.name} fill className="object-contain p-4 group-hover:scale-110 transition-transform" sizes="(max-width: 768px) 100vw, 33vw" />
+                        <Image src={p.images || "/categories/camera.png"} alt={p.name} fill className="object-contain p-4 group-hover:scale-110 transition-transform" sizes="(max-width: 768px) 100vw, 33vw" />
                       </Link>
                     </div>
 
@@ -272,7 +272,7 @@ export default function ProductListPage() {
                   <div key={p._id} className="bg-white rounded-lg shadow-md p-4 flex gap-4 hover:shadow-lg transition">
                     <Link href={`/products/${p._id}`} className="flex-shrink-0">
                       <div className="relative w-32 h-32 bg-gray-100 rounded">
-                        <Image src={p.images} alt={p.name} fill className="object-contain p-2" sizes="128px" />
+                        <Image src={p.images || "/categories/camera.png"} alt={p.name} fill className="object-contain p-2" sizes="128px" />
                       </div>
                     </Link>
                     <div className="flex-1 flex flex-col justify-between">
@@ -323,3 +323,4 @@ export default function ProductListPage() {
     </div>
   );
 
+}

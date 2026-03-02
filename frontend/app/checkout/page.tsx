@@ -4,7 +4,6 @@ import { Elements } from "@stripe/react-stripe-js";
 import { stripePromise } from "@/lib/stripe";
 import CheckoutForm from "@/components/CheckoutForm";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import api from "@/lib/api";
 
 

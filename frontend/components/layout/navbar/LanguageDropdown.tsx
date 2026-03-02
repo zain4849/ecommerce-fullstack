@@ -15,6 +15,12 @@ import {
 function LangDropdown() {
   const [language, setLanguage] = useState("English");
 
+
+  const languageNames = {
+    en: "English",
+    ar: "العربية", // Arabic
+  };
+  
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -28,7 +34,7 @@ function LangDropdown() {
       <DropdownMenuContent className="w-56 flex flex-col">
         <DropdownMenuRadioGroup value={language} onValueChange={setLanguage}>
           <DropdownMenuRadioItem value="English">English</DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="Arabic">Arabic</DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="العربية">العربية</DropdownMenuRadioItem>
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>
     </DropdownMenu>

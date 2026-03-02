@@ -6,7 +6,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import useBlur from "@/context/BlurContext";
+// import useBlur from "@/context/BlurContext";
 import User from "@/types/user";
 import Link from "next/link";
 import { useEffect } from "react";
@@ -19,12 +19,12 @@ function UserDropdown({
   user: User | null;
   onLogout: () => void;
 }) {
-  const { isBlur, setIsBlur } = useBlur();
-  console.log("isBlur:", isBlur); // 🧭 watch if it changes
+  // const { isBlur, setIsBlur } = useBlur();
+  // console.log("isBlur:", isBlur); // 🧭 watch if it changes
 
-  useEffect(() => {
-    console.log("isBlur:", isBlur);
-  }, [isBlur]);
+  // useEffect(() => {
+    // console.log("isBlur:", isBlur);
+  // }, [isBlur]);
 
   // You can use a fallback avatar if no image available
   const avatarSrc =
@@ -33,8 +33,11 @@ function UserDropdown({
       ? `https://ui-avatars.com/api/?name=${encodeURIComponent(user.email)}`
       : "https://ui-avatars.com/api/?name=Guest");
 
+  console.log("User is logged",user)
+
   return (
-    <DropdownMenu onOpenChange={() => setIsBlur((prev) => !prev)}>
+    <DropdownMenu >
+      {/* onOpenChange={() => setIsBlur((prev) => !prev)} */}
       <DropdownMenuTrigger asChild>
         {/* <Avatar className="h-9 w-9 cursor-pointer ring-1 ring-gray-200">
           <AvatarImage src={avatarSrc} alt={user?.email || "Guest"} />

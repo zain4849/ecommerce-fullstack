@@ -4,8 +4,6 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import NavBar from "@/components/layout/navbar/NavBar";
 import CartProvider from "@/context/CartContext";
-import { AuthProvider } from "@/context/AuthContext";
-import { BlurProvider } from "@/context/BlurContext";
 import Footer from "@/components/layout/Footer";
 import Providers from "./providers";
 import AuthInit from "./AuthInit";
@@ -42,14 +40,12 @@ export default function RootLayout({
         className={`antialiased bg-background`}
       >
         <Providers>
-            <BlurProvider>
               <AuthInit/>
               <NavBar />
               <main className="w-full">
                 {children}
               </main>
               <Footer/>
-            </BlurProvider>
         </Providers>
       </body>
     </html>

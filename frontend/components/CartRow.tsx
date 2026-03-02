@@ -1,7 +1,5 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Trash2 } from "lucide-react";
 import { CartItem } from "@/types/cart";
 
 function CartRow({ item }: { item: CartItem }) {
