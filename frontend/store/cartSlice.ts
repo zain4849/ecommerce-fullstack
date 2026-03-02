@@ -22,16 +22,7 @@ const initialState: CartState = {
 export const fetchCart = createAsyncThunk("cart/fetchCart", async () => {
   const res = await api.get("/cart");
 
-  return res.data.items.map((item: any) => ({
-    product: {
-      _id: item.productId._id,
-      name: item.productId.name,
-      price: item.productId.price,
-      stock: item.productId.stock,
-      images: item.productId.images,
-    },
-    quantity: item.quantity,
-  })) as CartItem[]; // this is what action returns
+  return res.data.items.map((item: CartItem) => item) as CartItem[]; // this is what action returns
 });
 
 export const addItem = createAsyncThunk(
@@ -96,14 +87,12 @@ const cartSlice = createSlice({
       item.quantity += action.payload.delta;
 
       if (item.quantity <= 0) {
-        state.items.filter((i) => {
-          i.product._id !== action.payload.productId;
-        });
+        state.items = state.items.filter((i) => i.product._id !== action.payload.productId);
       }
 
-      builder.addCase(clearCart.fulfilled, (state, action) => {
-        state.items = []; // always an empty array
-      });
+    });
+    builder.addCase(clearCart.fulfilled, (state, action) => {
+      state.items = []; // always an empty array
     });
   },
 });
