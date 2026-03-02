@@ -2,7 +2,6 @@ import "dotenv/config";
 
 
 import express from "express";
-import mongoose from "mongoose";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
@@ -25,7 +24,8 @@ const app = express();
 // Different requests → different instances
 // Counters reset → unreliable
 const generalLimiter = rateLimit({
-  windowsMs: 15 * 60* 1000,// in 15 mins, we get max from each IP address no further
+  // 15 * 60 * 1000 = 15 mins in ms = 900,000 ms
+  windowMs: 15 * 60 * 1000, // in 15 mins, we get max from each IP address no further
   max: 100, // Each IP limited to 100 req / windowMs
   message: "Too many requests from this IP, please try again later",
   standardHeaders: true,
@@ -33,7 +33,7 @@ const generalLimiter = rateLimit({
 })
 
 const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
+  windowMs: 15 * 60 * 1000, 
   max: 5,
   message: "Too many requests from this IP, please try again later",
   skipSuccessfulRequests: true,
@@ -82,20 +82,4 @@ app.use("/api/orders", orderRoutes)
 // app.get("/", (req, res) => {
 //   res.send("Ecommerce API running");
 // });
-
-if (!process.env.MONGO_URI) {
-  console.warn("Warning: MONGO_URI is not set. DB connection will fail.");
-  process.exit(1); // Stopping the app because it can't function without a DB
-}
-
-// Connect DB + start server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => {
-    console.log("MongoDB Connected");
-  })
-  .catch((err) => console.error(err));
 export default app
