@@ -11,7 +11,7 @@ export const register = async (req, res) => {
     if (existing) return res.status(400).json({ error: "User already exists" });
 
     // We hash cuz if someone hack the db they see jibberish
-    const hash = await bcrypt.hash(password, 10);
+    const hash = await bcrypt.hash(password, 10); 
 
     const user = await User.create({ name, email, passwordHash: hash });
     res.status(201).json({ message: "User created", userData: {id: user.id, email: user.email, role: user.role} });
