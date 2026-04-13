@@ -1,14 +1,20 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { CartItem } from "@/types/cart";
+import { Trash2 } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/store/store";
+import { updateQuantity, removeItem } from "@/store/cartSlice";
 
 function CartRow({ item }: { item: CartItem }) {
+  const dispatch = useDispatch<AppDispatch>();
+
   return (
     <div className="grid grid-cols-12 gap-4 py-12 border-b items-center">
       {/* Product */}
       <div className="col-span-5 flex gap-4">
         <Image
-          src={item.product.images ?? "/placeholder.png"}
+          src={item.product.images?.[0] ?? "/placeholder.svg"}
           alt={item.product.name}
           width={100}
           height={100}
@@ -18,14 +24,12 @@ function CartRow({ item }: { item: CartItem }) {
           <h2 className="font-medium">{item.product.name}</h2>
 
           {/* Variants */}
-          <p className="text-sm text-muted-foreground">
-            {/* Color: {item.product.color} • Size: {item.product.size} */}
-          </p>
+          <p className="text-sm text-muted-foreground"></p>
         </div>
       </div>
 
       {/* Price */}
-      <div className="col-span-2">${item.product.price.toFixed(2)}</div>
+      <div className="col-span-2">AED {item.product.price.toFixed(2)}</div>
 
       {/* Quantity */}
       {/* Stepper */}
@@ -33,37 +37,43 @@ function CartRow({ item }: { item: CartItem }) {
         <Button
           size="sm"
           variant="outline"
-          // onClick={() => decreaseQuantity(i.product._id)}
+          onClick={() =>
+            dispatch(updateQuantity({ productId: item.product._id, delta: -1 }))
+          }
         >
           −
         </Button>
 
-        {/* <span className="w-6 text-center">{i.quantity}</span> */}
-        <span className="w-6 text-center">3</span>
+        <span className="w-6 text-center">{item.quantity}</span>
         <Button
           size="sm"
-          // variant=""
-          // onClick={() => increaseQuantity(i.product._id)}
-          // disabled={i.quantity >= i.product.stock}
+          onClick={() =>
+            dispatch(updateQuantity({ productId: item.product._id, delta: 1 }))
+          }
+          disabled={
+            item.product.stock !== undefined &&
+            item.quantity >= item.product.stock
+          }
         >
           +
         </Button>
       </div>
 
       {/* Total */}
-      <div className="col-span-3 text-right font-bold text-xl">
-        ${(item.product.price * item.quantity).toFixed(2)}
+      <div className="col-span-2 text-right font-bold text-xl">
+        AED {(item.product.price * item.quantity).toFixed(2)}
       </div>
 
       {/* Remove */}
-      {/* <div className="col-span-1 text-right"></div> */}
-      {/* <Button
-        variant="ghost"
-        size="icon"
-        // onClick={() => removeItem(item.id)}
-      >
-        <Trash2 className="h-4 w-4" />
-      </Button> */}
+      <div className="col-span-1 text-right">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => dispatch(removeItem(item.product._id))}
+        >
+          <Trash2 className="h-4 w-4" />
+        </Button>
+      </div>
     </div>
   );
 }

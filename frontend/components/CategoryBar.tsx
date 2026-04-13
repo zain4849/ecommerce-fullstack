@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 const categories = [
   { name: "Laptops", icon: "/categories/laptop.png" },
@@ -9,33 +10,34 @@ const categories = [
   { name: "Audio", icon: "/categories/speakers.png" },
 ];
 
-const CategoryBar = () => { 
+const CategoryBar = () => {
   return (
-    // note the properties on the div right below give us "Overflow slider" for mobile
-    <div className="flex items-end h-80 relative py-10 gap-12 border-gray-200 border-b overflow-x-auto justify-center">
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6">
       {categories.map((cat) => (
-        <div key={cat.name} className="relative flex flex-col items-center justify-end group cursor-pointer">
+        <Link
+          key={cat.name}
+          href={`/products?category=${encodeURIComponent(cat.name)}`}
+          className="group"
+        >
+          <div className="relative flex flex-col items-center justify-center rounded-2xl border border-border/60 bg-white/70 backdrop-blur p-6 transition-all duration-200 group-hover:-translate-y-1 group-hover:shadow-xl group-hover:shadow-accent/10">
+            <div className="w-20 h-20 md:w-24 md:h-24 flex items-center justify-center rounded-full bg-gradient-to-br from-muted to-background">
+              <Image
+                src={cat.icon}
+                alt={cat.name}
+                className="object-contain w-14 h-14 md:w-16 md:h-16 transition-transform duration-200 ease-in-out group-hover:scale-105"
+                width={100}
+                height={100}
+              />
+            </div>
 
-          <button
-            className="self-end justify-self-end h-20 w-50  rounded-[50%] transition group-hover:bg-foreground"
-          />
-
-          <div className="absolute -top-20 w-30 h-30 flex items-center justify-center">
-            <Image
-              src={cat.icon}
-              alt={cat.name}
-              className="object-contain w-full h-full transition-transform duration-200 ease-in-out group-hover:-translate-y-3"
-              width={100}
-              height={100}
-            />
+            <span className="mt-4 text-sm md:text-base font-semibold text-center">
+              {cat.name}
+            </span>
           </div>
-
-          <span className="mt-3 text-lg font-bold">{cat.name}</span>
-        </div>
+        </Link>
       ))}
     </div>
   );
 };
-
 
 export default CategoryBar;

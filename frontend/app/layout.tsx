@@ -3,7 +3,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Poppins } from "next/font/google";
 import "./globals.css";
 import NavBar from "@/components/layout/navbar/NavBar";
-import CartProvider from "@/context/CartContext";
 import Footer from "@/components/layout/Footer";
 import Providers from "./providers";
 import AuthInit from "./AuthInit";
@@ -25,8 +24,8 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "E-commerce App",
-  description: "Full-stack project built with Next.js & Node.js",
+  title: "ZELECT — Electronics & Tech Store",
+  description: "Shop laptops, phones, cameras, gaming gear & smart home devices. Free shipping on orders over AED 200.",
 };
 
 export default function RootLayout({
@@ -36,16 +35,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${poppins.variable}`}>
-      <body
-        className={`antialiased bg-background`}
-      >
+      <body className={`antialiased bg-background`}>
         <Providers>
-              <AuthInit/>
-              <NavBar />
-              <main className="w-full">
-                {children}
-              </main>
-              <Footer/>
+          <AuthInit />
+          <NavBar />
+          <main className="w-full">{children}</main>
+          <Footer />
         </Providers>
       </body>
     </html>
