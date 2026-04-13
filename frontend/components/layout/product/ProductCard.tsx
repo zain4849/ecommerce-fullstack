@@ -18,7 +18,7 @@ export default function ProductCard({ product }: { product: Product }) {
           <Link key={product._id} href={`/products/${product._id}`}>
             <div className="h-[250px] flex justify-center items-center">
               <Image
-                src={product.images || "/placeholder.jpg"}
+                src={product.images?.[0] || "/placeholder.svg"}
                 alt={product.name}
                 className=" object-contain"
                 width={100}
@@ -27,7 +27,7 @@ export default function ProductCard({ product }: { product: Product }) {
             </div>
             <div className="p-2 px-1 my-4">
               <h3 className="font-semibold text-lg">{product.name}</h3>
-              <p className="text-gray-500">${product.price}</p>
+              <p className="text-gray-500">AED {product.price.toFixed(2)}</p>
             </div>
           </Link>
           <Button className=" mx-1" onClick={() => dispatch(addItem(product))}>

@@ -1,6 +1,16 @@
+import { Product } from "./product";
+
+export interface OrderItem {
+  productId: Product;
+  quantity: number;
+}
+
 export default interface Order {
-    id: string
-    total: number
-    status: string
-    createdAt: string
+  _id: string;
+  totalAmount: number;
+  status: string;
+  paymentStatus: string;
+  paymentIntentId?: string;
+  items: OrderItem[];
+  createdAt: string;
 }

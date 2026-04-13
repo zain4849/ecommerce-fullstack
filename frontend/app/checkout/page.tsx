@@ -4,57 +4,49 @@ import { Elements } from "@stripe/react-stripe-js";
 import { stripePromise } from "@/lib/stripe";
 import CheckoutForm from "@/components/CheckoutForm";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import { useRouter } from "next/navigation";
 import api from "@/lib/api";
 
-
-
 export default function CheckoutPage() {
-  const [clientSecret, setClientSecret] = useState(null);
+  const user = useSelector((state: RootState) => state.auth.user);
+  const router = useRouter();
+  const [clientSecret, setClientSecret] = useState<string | undefined>(
+    undefined,
+  );
 
   useEffect(() => {
+    if (!user) {
+      router.replace("/auth/login");
+      return;
+    }
+
     // Call backend to create PaymentIntent when user visits checkout
     const createPaymentIntent = async () => {
       await api
-        .post("/orders", {
-          /* pass cart items if needed */
-        })
+        .post("/orders", {})
         .then((res) => setClientSecret(res.data.clientSecret))
         .catch(console.error);
     };
-    // fetch("/api/orders", {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify({
-    //     /* pass cart items if needed */
-    //   }),
-    // })
-    //   .then((res) => res.json())
-    //   .then((data) => setClientSecret(data.clientSecret))
-    //   .catch(console.error);
     createPaymentIntent();
-  }, []);
+  }, [user, router]);
 
-  const options = {
-    clientSecret,
-    appearance: {
-      theme: "stripe",
-      labels: "floating",
-    },
-  };
-
-  if (!clientSecret) return <p>Loading payment...</p>
+  if (!clientSecret)
+    return <p className="text-center mt-10">Loading payment...</p>;
 
   return (
-    <div className="container mx-auto py-12">
+    <div className="container mx-auto py-12 min-h-[60vh]">
       <h1 className="text-2xl font-semibold mb-4">Checkout</h1>
-
-      {clientSecret ? (
-        <Elements options={options} stripe={stripePromise}>
-          <CheckoutForm />
-        </Elements>
-      ) : (
-        <p>Loading payment form...</p>
-      )}
+      <Elements
+        options={{
+          clientSecret,
+          appearance: { theme: "stripe", labels: "floating" },
+        }}
+        stripe={stripePromise}
+      >
+        <CheckoutForm />
+      </Elements>
     </div>
   );
 }

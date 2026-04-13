@@ -1,17 +1,19 @@
 "use client";
 
-import { useCart } from "@/context/CartContext";
 import {
   PaymentElement,
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { clearCart } from "@/store/cartSlice";
+import { AppDispatch } from "@/store/store";
 
 export default function CheckoutForm() {
   const stripe = useStripe();
   const elements = useElements();
-  const {clearCart} = useCart()
+  const dispatch = useDispatch<AppDispatch>();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -29,21 +31,20 @@ export default function CheckoutForm() {
       redirect: "if_required",
     });
 
-
     if (error) {
       setMessage(error.message!);
     } else if (paymentIntent && paymentIntent.status === "succeeded") {
       setMessage("Payment successful!");
 
       // After success backend logic changes order status to paid and removes necessary # product from stock
-      clearCart()
+      dispatch(clearCart());
       window.location.href = "/orders/success";
     }
 
     setLoading(false);
   };
 
-    /* 
+  /* 
     After the handSubmit returns Promise, final status is validated by webhook on the server
     What handleSubmit does above:
     1. Sends the card info directly to Stripe’s servers (securely).

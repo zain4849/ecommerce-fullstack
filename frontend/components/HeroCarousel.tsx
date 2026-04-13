@@ -40,9 +40,8 @@ export function HeroCarousel() {
     return () => clearInterval(interval);
   }, [api]);
 
-
   return (
-    <div className="relative w-full mb-25 rounded-xl overflow-hidden">
+    <div className="relative w-full rounded-3xl overflow-hidden border border-white/10 shadow-2xl shadow-black/20">
       <Carousel
         setApi={setApi}
         opts={{
@@ -54,28 +53,36 @@ export function HeroCarousel() {
         <CarouselContent>
           {slides.map((slide) => (
             <CarouselItem key={slide.id}>
-              <div className="relative w-full h-[400px] md:h-[600px]">
+              <div className="relative w-full h-[420px] md:h-[560px]">
                 <Image
                   src={slide.image}
                   alt={slide.title}
                   fill
                   className="object-cover"
-                  priority
+                  priority={slide.id === 1}
+                  sizes="100vw"
                 />
-                {/* <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-center text-white px-4">
-                  <h2 className="text-3xl md:text-5xl font-bold">
-                    {slide.title}
-                  </h2>
-                  <p className="mt-2 text-lg md:text-xl">{slide.subtitle}</p>
-                </div> */}
+                <div className="absolute inset-0 bg-gradient-to-r from-black/65 via-black/35 to-transparent" />
+                <div className="absolute inset-0 flex items-end md:items-center">
+                  <div className="p-6 md:p-12 text-white max-w-xl">
+                    <p className="text-xs md:text-sm uppercase tracking-[0.24em] text-white/80 mb-3">
+                      ShopHub picks
+                    </p>
+                    <h2 className="text-3xl md:text-5xl font-black leading-tight">
+                      {slide.title}
+                    </h2>
+                    <p className="mt-3 text-sm md:text-base text-white/85">
+                      {slide.subtitle}
+                    </p>
+                  </div>
+                </div>
               </div>
             </CarouselItem>
           ))}
         </CarouselContent>
 
-        {/* Optional navigation arrows */}
-        <CarouselPrevious className="left-4" />
-        <CarouselNext className="right-4" />
+        <CarouselPrevious className="left-4 md:left-6 bg-white/90 hover:bg-white border-none" />
+        <CarouselNext className="right-4 md:right-6 bg-white/90 hover:bg-white border-none" />
       </Carousel>
     </div>
   );
