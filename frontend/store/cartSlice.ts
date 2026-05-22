@@ -1,6 +1,6 @@
 import api from "@/lib/api";
 import { CartItem } from "@/types/cart";
-import { Product } from "@/types/product";
+import { Product, getProductId } from "@/types/product";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 /* ---------------- TYPES ---------------- */
@@ -9,6 +9,20 @@ interface CartState {
   items: CartItem[];
   loading: boolean;
 }
+
+const getErrorMessage = (err: unknown, fallback: string) => {
+  if (
+    typeof err === "object" &&
+    err !== null &&
+    "response" in err &&
+    typeof (err as { response?: unknown }).response === "object" &&
+    (err as { response?: { data?: unknown } }).response?.data &&
+    typeof (err as { response?: { data?: { error?: unknown } } }).response?.data?.error === "string"
+  ) {
+    return (err as { response: { data: { error: string } } }).response.data.error;
+  }
+  return fallback;
+};
 
 /* ---------------- INITIAL STATE ---------------- */
 
@@ -23,8 +37,8 @@ export const fetchCart = createAsyncThunk("cart/fetchCart", async () => {
   const res = await api.get("/cart");
 
   return res.data.items.map(
-    (item: { productId: Product; quantity: number }) => ({
-      product: item.productId,
+    (item: { product: Product; quantity: number }) => ({
+      product: item.product,
       quantity: item.quantity,
     }),
   ) as CartItem[];
@@ -34,12 +48,12 @@ export const addItem = createAsyncThunk(
   "cart/addItem",
   async (product: Product, { rejectWithValue }) => {
     try {
-      await api.post("/cart", { productId: product._id, quantity: 1 });
+      await api.post("/cart", { productId: getProductId(product), quantity: 1 });
       return product;
-    } catch (err: any) {
+    } catch (err: unknown) {
       return rejectWithValue({
         product,
-        error: err.response?.data?.error || "Failed to add item",
+        error: getErrorMessage(err, "Failed to add item"),
       });
     }
   },
@@ -54,11 +68,11 @@ export const updateQuantity = createAsyncThunk(
     try {
       await api.patch(`/cart/${productId}`, { delta });
       return { productId, delta };
-    } catch (err: any) {
+    } catch (err: unknown) {
       return rejectWithValue({
         productId,
         delta,
-        error: err.response?.data?.error || "Failed to update",
+        error: getErrorMessage(err, "Failed to update"),
       });
     }
   },
@@ -70,10 +84,10 @@ export const removeItem = createAsyncThunk(
     try {
       await api.delete(`/cart/${productId}`);
       return productId;
-    } catch (err: any) {
+    } catch (err: unknown) {
       return rejectWithValue({
         productId,
-        error: err.response?.data?.error || "Failed to remove",
+        error: getErrorMessage(err, "Failed to remove"),
       });
     }
   },
@@ -97,20 +111,20 @@ const cartSlice = createSlice({
     // Optimistic: update UI immediately on pending
     builder.addCase(addItem.pending, (state, action) => {
       const product = action.meta.arg;
-      const existing = state.items.find((i) => i.product._id === product._id);
+      const pid = getProductId(product);
+      const existing = state.items.find((i) => getProductId(i.product) === pid);
       if (existing) existing.quantity++;
       else state.items.push({ product, quantity: 1 });
     });
     builder.addCase(addItem.rejected, (state, action) => {
       // Rollback: undo the optimistic add
       const { product } = action.payload as { product: Product; error: string };
-      const existing = state.items.find((i) => i.product._id === product._id);
+      const pid = getProductId(product);
+      const existing = state.items.find((i) => getProductId(i.product) === pid);
       if (existing) {
         existing.quantity--;
         if (existing.quantity <= 0) {
-          state.items = state.items.filter(
-            (i) => i.product._id !== product._id,
-          );
+          state.items = state.items.filter((i) => getProductId(i.product) !== pid);
         }
       }
     });
@@ -119,17 +133,17 @@ const cartSlice = createSlice({
     builder.addCase(removeItem.pending, (state, action) => {
       const productId = action.meta.arg;
       // Save removed item for potential rollback (stored in meta)
-      state.items = state.items.filter((i) => i.product._id !== productId);
+      state.items = state.items.filter((i) => getProductId(i.product) !== productId);
     });
 
     // Optimistic: update quantity immediately on pending
     builder.addCase(updateQuantity.pending, (state, action) => {
       const { productId, delta } = action.meta.arg;
-      const item = state.items.find((i) => i.product._id === productId);
+      const item = state.items.find((i) => getProductId(i.product) === productId);
       if (!item) return;
       item.quantity += delta;
       if (item.quantity <= 0) {
-        state.items = state.items.filter((i) => i.product._id !== productId);
+        state.items = state.items.filter((i) => getProductId(i.product) !== productId);
       }
     });
     builder.addCase(updateQuantity.rejected, (state, action) => {
@@ -139,7 +153,7 @@ const cartSlice = createSlice({
         delta: number;
         error: string;
       };
-      const item = state.items.find((i) => i.product._id === productId);
+      const item = state.items.find((i) => getProductId(i.product) === productId);
       if (item) {
         item.quantity -= delta;
       }

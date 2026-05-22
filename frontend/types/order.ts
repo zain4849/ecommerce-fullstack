@@ -1,15 +1,23 @@
 import { Product } from "./product";
 
 export interface OrderItem {
-  productId: Product;
+  id?: string;
+  productId: string;
+  product?: Product | null;
   quantity: number;
+  priceAtPurchase?: number | string;
 }
 
+export type OrderStatus = "PROCESSING" | "SHIPPED" | "DELIVERED" | "CANCELLED";
+export type PaymentStatus = "PENDING" | "PAID" | "FAILED";
+
 export default interface Order {
-  _id: string;
-  totalAmount: number;
-  status: string;
-  paymentStatus: string;
+  id: string;
+  userId?: string;
+  user?: { id: string; name: string; email: string } | null;
+  totalAmount: number | string;
+  status: OrderStatus;
+  paymentStatus: PaymentStatus;
   paymentIntentId?: string;
   items: OrderItem[];
   createdAt: string;

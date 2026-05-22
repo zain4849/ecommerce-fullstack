@@ -1,8 +1,8 @@
 export interface Product {
-  _id: string;
+  id: string;
   name: string;
   description?: string;
-  price: number;
+  price: number | string;
   stock?: number;
   category?: string;
   brand?: string;
@@ -11,4 +11,8 @@ export interface Product {
   featured?: boolean;
   rating?: number;
   numReviews?: number;
+}
+
+export function getProductId(product: Product): string {
+  return product.id;
 }

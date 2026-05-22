@@ -5,74 +5,55 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 /* ---------------- TYPES ---------------- */
 
 interface AuthState {
-  // not a class, just a type definition
   user: User | null;
-  token: string | null;
 }
 
 /* ---------------- INITIAL STATE ---------------- */
 
 const initialState: AuthState = {
-  // an object
   user: null,
-  token: null,
 };
 
-/* ---------------- SLICE ---------------- */
-
-const authSlice = createSlice({
-  name: "auth",
-  initialState,
-  reducers: { 
-    logout: (state) => {  
-      state.user = null;
-      state.token = null;
-      localStorage.removeItem("user");
-      localStorage.removeItem("token");
-      delete api.defaults.headers.common["Authorization"];
-    },
-
-    loadFromStorage: (state) => {
-      const user = localStorage.getItem("user");
-      const token = localStorage.getItem("token");
-
-      if (user && token) {
-        state.user = JSON.parse(user);
-        state.token = token;
-        api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-      }
-    },
-  },
-  extraReducers: (builder) => {
-    builder.addCase(login.fulfilled, (state, action) => {
-      state.user = action.payload.userData;
-      state.token = action.payload.token;
-    });
-  },
-});
-
 /* ---------------- ASYNC THUNKS ---------------- */
-/* THESE REPLACE your Context login/register */
 
 export const login = createAsyncThunk(
   "auth/login",
   async (
-    { email, password }: { email: string; password: string }, // 1st argument is the payload
-    { rejectWithValue }, //                                      2nd argument is an object with helper functions   
+    { email, password }: { email: string; password: string },
+    { rejectWithValue },
   ) => {
     try {
       const res = await api.post("/auth/login", { email, password });
 
-      // side effects (same as your context)
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("user", JSON.stringify(res.data.userData));
-      api.defaults.headers.common["Authorization"] = `Bearer ${res.data.token}`;
+      return res.data;
+    } catch (err: unknown) {
+      const typedErr = err as {
+        response?: { data?: { error?: string } };
+        message?: string;
+      };
+      return rejectWithValue(
+        typedErr.response?.data?.error || typedErr.message || "Login failed",
+      );
+    }
+  },
+);
 
-      return res.data; // action.payload === res.data
-//    dispatch({ type: "auth/login/fulfilled", payload: result });
-
-    } catch (err) {
-      return rejectWithValue("Login failed");
+export const fetchCurrentUser = createAsyncThunk(
+  "auth/fetchCurrentUser",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await api.get("/auth/me");
+      return res.data;
+    } catch (err: unknown) {
+      const typedErr = err as {
+        response?: { data?: { error?: string } };
+        message?: string;
+      };
+      return rejectWithValue(
+        typedErr.response?.data?.error ||
+          typedErr.message ||
+          "Could not load current user",
+      );
     }
   },
 );
@@ -88,32 +69,63 @@ export const register = createAsyncThunk(
     { dispatch, rejectWithValue },
   ) => {
     try {
-      console.log("Registering user:", { name, email });
       const res = await api.post("/auth/register", { name, email, password });
-      console.log("Registration successful:", res.data);
-
-      // reuse login logic to automatically log the user in after registration
       const loginResult = await dispatch(login({ email, password }));
 
-      if (login.fulfilled.match(loginResult)) {
-        console.log("Auto-login after registration successful");
-      } else {
-        console.error("Auto-login after registration failed");
+      if (!login.fulfilled.match(loginResult)) {
+        return rejectWithValue("Auto-login after registration failed");
       }
 
-      // Return the registration response data
       return res.data;
-    } catch (err: any) {
-      console.error("Registration error:", err);
-      // Return error message for the component to handle
+    } catch (err: unknown) {
+      const typedErr = err as {
+        response?: { data?: { error?: string } };
+        message?: string;
+      };
       return rejectWithValue(
-        err.response?.data?.error || err.message || "Registration failed",
+        typedErr.response?.data?.error ||
+          typedErr.message ||
+          "Registration failed",
       );
     }
   },
 );
-/* ---------------- EXPORTS ---------------- */
-// If logout in child component called by itself, return {type: 'auth/logout'} to reducer, thus should always be called via dispatch(logout())
 
-export const { logout, loadFromStorage } = authSlice.actions;
+/* ---------------- SLICE ---------------- */
+
+const authSlice = createSlice({
+  name: "auth",
+  initialState,
+  reducers: {
+    logout: (state) => {
+      state.user = null;
+      localStorage.removeItem("user");
+    },
+
+    loadFromStorage: (state) => {
+      const user = localStorage.getItem("user");
+      if (user) {
+        state.user = JSON.parse(user);
+      }
+    },
+
+    setCurrentUser: (state, action) => {
+      state.user = action.payload.userData;
+      localStorage.setItem("user", JSON.stringify(action.payload.userData));
+    },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(login.fulfilled, (state, action) => {
+      state.user = action.payload.userData;
+    });
+    builder.addCase(fetchCurrentUser.fulfilled, (state, action) => {
+      state.user = action.payload.userData;
+      localStorage.setItem("user", JSON.stringify(action.payload.userData));
+    });
+  },
+});
+
+/* ---------------- EXPORTS ---------------- */
+
+export const { logout, loadFromStorage, setCurrentUser } = authSlice.actions;
 export default authSlice.reducer;
