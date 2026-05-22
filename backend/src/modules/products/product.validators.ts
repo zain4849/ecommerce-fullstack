@@ -1,7 +1,9 @@
 import Joi from "joi";
 
-export const objectIdParamSchema = Joi.object({
-  id: Joi.string().hex().length(24).required(),
+const cuidSchema = Joi.string().pattern(/^c[a-z0-9]{24}$/).required();
+
+export const productIdParamSchema = Joi.object({
+  id: cuidSchema,
 });
 
 export const createProductSchema = Joi.object({
@@ -10,8 +12,12 @@ export const createProductSchema = Joi.object({
   price: Joi.number().min(0).required(),
   stock: Joi.number().integer().min(0).default(0),
   category: Joi.string().trim().max(80).allow(""),
+  brand: Joi.string().trim().max(80).allow(""),
   images: Joi.array().items(Joi.string().trim()).default([]),
   inStock: Joi.boolean().optional(),
+  featured: Joi.boolean().optional(),
+  rating: Joi.number().min(0).max(5).optional(),
+  numReviews: Joi.number().integer().min(0).optional(),
 });
 
 export const updateProductSchema = Joi.object({
@@ -20,6 +26,10 @@ export const updateProductSchema = Joi.object({
   price: Joi.number().min(0),
   stock: Joi.number().integer().min(0),
   category: Joi.string().trim().max(80).allow(""),
+  brand: Joi.string().trim().max(80).allow(""),
   images: Joi.array().items(Joi.string().trim()),
   inStock: Joi.boolean(),
+  featured: Joi.boolean(),
+  rating: Joi.number().min(0).max(5),
+  numReviews: Joi.number().integer().min(0),
 }).min(1);

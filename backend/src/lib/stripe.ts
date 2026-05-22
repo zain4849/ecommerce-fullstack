@@ -1,8 +1,6 @@
 import Stripe from "stripe";
 
-// Only throw error if stripe is actually needed (when creating payment intents)
-// This allows the server to start without stripe key for development
-let stripe = null;
+let stripe: Stripe | null = null;
 
 if (process.env.STRIPE_SECRET_KEY) {
   stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
