@@ -9,7 +9,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import ProductCard from "./ProductCard";
-import { Product } from "@/types/product";
+import { Product, getProductId } from "@/types/product";
 
 const ProductCarousel = ({ products }: { products: Product[] }) => {
   return (
@@ -17,17 +17,20 @@ const ProductCarousel = ({ products }: { products: Product[] }) => {
       opts={{
         align: "start",
       }}
-      className="w-full"
+      className="w-full group/carousel"
     >
-      <CarouselContent>
-        {products.map((product, i) => (
-          <CarouselItem className="md:basis-1/2 lg:basis-1/5" key={product._id}>
+      <CarouselContent className="-ml-3 md:-ml-4">
+        {products.map((product) => (
+          <CarouselItem
+            className="pl-3 md:pl-4 basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5"
+            key={getProductId(product)}
+          >
             <ProductCard product={product} />
           </CarouselItem>
         ))}
       </CarouselContent>
-      <CarouselNext className="right-[-8px] md:right-[-18px] bg-background/90 border-border hover:bg-background" />
-      <CarouselPrevious className="left-[-8px] md:left-[-18px] bg-background/90 border-border hover:bg-background" />
+      <CarouselPrevious className="-left-2 md:-left-5 size-10 bg-card border-border shadow-md hover:bg-card hover:scale-105 opacity-0 group-hover/carousel:opacity-100 transition-opacity disabled:opacity-0" />
+      <CarouselNext className="-right-2 md:-right-5 size-10 bg-card border-border shadow-md hover:bg-card hover:scale-105 opacity-0 group-hover/carousel:opacity-100 transition-opacity disabled:opacity-0" />
     </Carousel>
   );
 };

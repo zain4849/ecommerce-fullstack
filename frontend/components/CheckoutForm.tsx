@@ -9,6 +9,8 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { clearCart } from "@/store/cartSlice";
 import { AppDispatch } from "@/store/store";
+import { Button } from "@/components/ui/button";
+import { Lock } from "lucide-react";
 
 export default function CheckoutForm() {
   const stripe = useStripe();
@@ -68,16 +70,21 @@ export default function CheckoutForm() {
     */
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-md space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-5">
       <PaymentElement />
-      <button
+      <Button
         type="submit"
         disabled={loading || !stripe || !elements}
-        className="w-full py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+        className="w-full h-12 text-base gap-2 rounded-xl"
       >
-        {loading ? "Processing..." : "Pay Now"}
-      </button>
-      {message && <div className="text-red-500 mt-2">{message}</div>}
+        <Lock className="size-4" />
+        {loading ? "Processing…" : "Pay securely"}
+      </Button>
+      {message && (
+        <div className="rounded-lg border border-destructive/20 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+          {message}
+        </div>
+      )}
     </form>
   );
 }

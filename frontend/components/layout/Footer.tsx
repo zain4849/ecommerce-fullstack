@@ -6,6 +6,7 @@ import { CiMail } from "react-icons/ci";
 
 
 const Footer = () => {
+  const currentYear = new Date().getFullYear();
   return (
     <footer className="w-full h-125 bg-foreground text-background">
       <div className="container mx-auto w-full h-125  bg-foreground">
@@ -84,7 +85,7 @@ const Footer = () => {
         </div>
         <div className=" w-full h-20 border-t text-white flex items-center gap-4">
           <h1 className="font-bold text-[1.5rem]">ZELECT</h1>
-          <p>© 2025 ZELECT. All rights reserved.</p>
+          <p>© {currentYear} ZELECT. All rights reserved.</p>
         </div>
       </div>
     </footer>

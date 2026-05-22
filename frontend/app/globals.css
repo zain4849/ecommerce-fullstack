@@ -39,6 +39,12 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+  --color-surface: var(--surface);
+  --color-surface-foreground: var(--surface-foreground);
+  --color-sale: var(--sale);
+  --color-sale-foreground: var(--sale-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -50,24 +56,30 @@
   --radius: 0.625rem;
 
   /* ===== Deep Purple Light Theme ===== */
-  --background: #fdfcfc;             /* base background */
+  --background: #f6f4f9;             /* page background — soft lavender wash */
   --foreground: #212531;             /* primary text */
-  --card: #fff;                   /* cards / surfaces */
+  --card: #ffffff;                   /* cards / surfaces */
   --card-foreground: #212531;
-  --popover: #b7a2c9;
+  --surface: #ffffff;                /* alt surface for sections */
+  --surface-foreground: #212531;
+  --popover: #ffffff;
   --popover-foreground: #212531;
-  --primary: #4b3a70;                /* buttons / accents */
-  --primary-foreground: #c5c3c4;
-  --secondary: #b7a2c9;
-  --secondary-foreground: #212531;
-  --muted: #c5c3c4;
-  --muted-foreground: #322f42;
-  --accent: #b7a2c9;
-  --accent-foreground: #212531;
+  --primary: #4b3a70;                /* buttons / brand */
+  --primary-foreground: #ffffff;
+  --secondary: #ece6f3;              /* soft lavender chip background */
+  --secondary-foreground: #322f42;
+  --muted: #efeaf3;
+  --muted-foreground: #6b6577;
+  --accent: #6c4fad;                 /* punchy purple for hover/highlights */
+  --accent-foreground: #ffffff;
+  --sale: #ef4444;                   /* sale/discount badge red */
+  --sale-foreground: #ffffff;
+  --success: #16a34a;
+  --success-foreground: #ffffff;
   --destructive: #e63946;
-  --border: #b7a2c9;
-  --input: #b7a2c9;
-  --ring: #4b3a70;
+  --border: #e6dff0;                 /* much softer border */
+  --input: #e6dff0;
+  --ring: #6c4fad;
 
   /* charts / misc */ 
   --chart-1: #4b3a70;
@@ -91,23 +103,29 @@
 
 /* DARK THEME */
 .dark {
-  --background: #212531;
-  --foreground: #c5c3c4;
-  --card: #322f42;
-  --card-foreground: #c5c3c4;
-  --popover: #322f42;
-  --popover-foreground: #c5c3c4;
+  --background: #1b1d27;
+  --foreground: #ece9f1;
+  --card: #262834;
+  --card-foreground: #ece9f1;
+  --surface: #262834;
+  --surface-foreground: #ece9f1;
+  --popover: #262834;
+  --popover-foreground: #ece9f1;
   --primary: #b7a2c9;
-  --primary-foreground: #212531;
-  --secondary: #4b3a70;
-  --secondary-foreground: #c5c3c4;
-  --muted: #322f42;
-  --muted-foreground: #c5c3c4;
-  --accent: #4b3a70;
-  --accent-foreground: #c5c3c4;
+  --primary-foreground: #1b1d27;
+  --secondary: #322f42;
+  --secondary-foreground: #ece9f1;
+  --muted: #2c2e3b;
+  --muted-foreground: #a9a4b6;
+  --accent: #b7a2c9;
+  --accent-foreground: #1b1d27;
+  --sale: #f87171;
+  --sale-foreground: #ffffff;
+  --success: #4ade80;
+  --success-foreground: #1b1d27;
   --destructive: #e63946;
-  --border: #4b3a70;
-  --input: #4b3a70;
+  --border: #383545;
+  --input: #383545;
   --ring: #b7a2c9;
 
   --chart-1: #b7a2c9;
@@ -132,7 +150,24 @@
     @apply border-border outline-ring/50;
   }
 
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+/* Reusable utility to hide native scrollbars on horizontal strips */
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 }

@@ -9,7 +9,6 @@ import {
 // import useBlur from "@/context/BlurContext";
 import User from "@/types/user";
 import Link from "next/link";
-import { useEffect } from "react";
 import { FaRegUser } from "react-icons/fa";
 
 function UserDropdown({
@@ -27,14 +26,6 @@ function UserDropdown({
   // }, [isBlur]);
 
   // You can use a fallback avatar if no image available
-  const avatarSrc =
-    user?.images ||
-    (user?.email
-      ? `https://ui-avatars.com/api/?name=${encodeURIComponent(user.email)}`
-      : "https://ui-avatars.com/api/?name=Guest");
-
-  console.log("User is logged",user)
-
   return (
     <DropdownMenu >
       {/* onOpenChange={() => setIsBlur((prev) => !prev)} */}
@@ -68,9 +59,6 @@ function UserDropdown({
           <>
             <DropdownMenuLabel>{user.email}</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-              <Link href="/profile">My Profile</Link>
-            </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <Link href="/orders">My Orders</Link>
             </DropdownMenuItem>

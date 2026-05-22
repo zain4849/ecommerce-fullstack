@@ -2,30 +2,19 @@
 
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { Search } from "lucide-react";
+import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "@/store/authSlice";
 import { RootState } from "@/store/store";
 import UserDropdown from "./UserDropdown";
-import { Input } from "@/components/ui/input";
+import NavBarSearch from "./NavBarSearch";
 
 export default function NavBar() {
   const dispatch = useDispatch();
-  const router = useRouter();
   const user = useSelector((state: RootState) => state.auth.user);
   const items = useSelector((state: RootState) => state.cart.items);
   const pathname = usePathname();
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      router.push(`/products?q=${encodeURIComponent(searchQuery.trim())}`);
-    }
-  };
 
   return (
     <header className="shadow bg-foreground py-2 px-5 text-white z-50 top-0 sticky">
@@ -35,16 +24,7 @@ export default function NavBar() {
           ZELECT
         </Link>
 
-        <form onSubmit={handleSearch} className="relative w-full max-w-[60%]">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            type="search"
-            placeholder="Search products..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="py-6 pl-13 rounded-[1.15rem] bg-white text-foreground placeholder:text-gray-400"
-          />
-        </form>
+        <NavBarSearch />
 
         {/* Right section */}
         <div className="flex items-center space-x-3">

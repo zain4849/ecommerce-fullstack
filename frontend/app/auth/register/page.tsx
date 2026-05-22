@@ -49,9 +49,13 @@ export default function Register() {
         register({ name: data.name, email: data.email, password: data.password }),
       ).unwrap();
       router.push("/");
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const message =
+        typeof err === "object" && err !== null && "message" in err
+          ? (err as { message?: string }).message
+          : undefined;
       setServerError(
-        err?.response?.data?.error || err?.message || "Registration failed. Please try again.",
+        message || "Registration failed. Please try again.",
       );
     } finally {
       setLoading(false);

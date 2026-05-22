@@ -7,9 +7,9 @@ import Link from "next/link";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store/store";
-import { login, loadFromStorage } from "@/store/authSlice";
+import { login, loadFromStorage, fetchCurrentUser } from "@/store/authSlice";
 import { useRouter, useSearchParams } from "next/navigation";
-import api from "@/lib/api";
+import { API_BASE_URL } from "@/lib/api";
 
 function LoginContent() {
   const dispatch = useDispatch<AppDispatch>();
@@ -22,19 +22,23 @@ function LoginContent() {
 
   // Handle OAuth callback
   useEffect(() => {
-    const token = searchParams.get("token");
-    const userData = searchParams.get("userData");
-    if (token && userData) {
-      try {
-        const user = JSON.parse(decodeURIComponent(userData));
-        localStorage.setItem("token", token);
-        localStorage.setItem("user", JSON.stringify(user));
-        api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-        dispatch(loadFromStorage());
-        router.push("/");
-      } catch {
-        setError("OAuth login failed");
-      }
+    const authStatus = searchParams.get("auth");
+
+    dispatch(loadFromStorage());
+
+    if (authStatus === "google") {
+      setLoading(true);
+      dispatch(fetchCurrentUser())
+        .unwrap()
+        .then(() => {
+          router.push("/");
+        })
+        .catch(() => {
+          setError("OAuth login failed. Please try again.");
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     }
   }, [searchParams, dispatch, router]);
 
@@ -45,18 +49,16 @@ function LoginContent() {
     try {
       await dispatch(login({ email, password })).unwrap();
       router.push("/");
-    } catch (err: any) {
-      setError(
-        err?.response?.data?.error ||
-          err?.message ||
-          "Login failed. Please check your credentials.",
-      );
+    } catch (err: unknown) {
+      const message =
+        typeof err === "object" && err !== null && "message" in err
+          ? (err as { message?: string }).message
+          : undefined;
+      setError(message || "Login failed. Please check your credentials.");
     } finally {
       setLoading(false);
     }
   };
-
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
 
   return (
     <div>
@@ -103,7 +105,7 @@ function LoginContent() {
         </div>
 
         <a
-          href={`${apiUrl}/auth/google`}
+          href={`${API_BASE_URL}/auth/google`}
           className="w-full flex items-center justify-center gap-3 border rounded-2xl py-4 hover:bg-gray-50 transition"
         >
           <svg className="w-5 h-5" viewBox="0 0 24 24">

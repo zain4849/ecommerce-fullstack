@@ -1,21 +1,10 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import { Poppins } from "next/font/google";
 import "./globals.css";
 import NavBar from "@/components/layout/navbar/NavBar";
 import Footer from "@/components/layout/Footer";
 import Providers from "./providers";
 import AuthInit from "./AuthInit";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -34,8 +23,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${poppins.variable}`}>
-      <body className={`antialiased bg-background`}>
+    <html lang="en" className={`${poppins.variable}`} suppressHydrationWarning>
+      {/* Extensions (e.g. ColorZilla) inject attributes on <body>; suppressHydrationWarning avoids false-positive hydration errors. */}
+      <body className={`antialiased bg-background`} suppressHydrationWarning>
         <Providers>
           <AuthInit />
           <NavBar />

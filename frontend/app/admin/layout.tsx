@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { useEffect } from "react";
 import { LayoutDashboard, Package, ShoppingCart } from "lucide-react";
+import { useCurrentUser } from "@/src/features/auth/hooks/useCurrentUser";
 
 const adminLinks = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
@@ -19,16 +20,32 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const user = useSelector((state: RootState) => state.auth.user);
+  const currentUserQuery = useCurrentUser();
+  const currentUser = user ?? currentUserQuery.data?.userData ?? null;
   const router = useRouter();
   const pathname = usePathname();
 
   useEffect(() => {
-    if (!user || user.role !== "admin") {
-      router.push("/");
+    if (currentUserQuery.isPending || currentUserQuery.isFetching) {
+      return;
     }
-  }, [user, router]);
 
-  if (!user || user.role !== "admin") {
+    if (!currentUser) {
+      router.replace(`/auth/login?from=${encodeURIComponent(pathname)}`);
+      return;
+    }
+
+    if (currentUser.role !== "ADMIN") {
+      router.replace("/");
+    }
+  }, [currentUser, currentUserQuery.isFetching, currentUserQuery.isPending, pathname, router]);
+
+  if (
+    currentUserQuery.isPending ||
+    currentUserQuery.isFetching ||
+    !currentUser ||
+    currentUser.role !== "ADMIN"
+  ) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <p className="text-gray-500">Checking permissions...</p>
@@ -43,7 +60,7 @@ export default function AdminLayout({
         <aside className="w-64 bg-white border-r min-h-screen sticky top-0 pt-6">
           <div className="px-6 pb-6 border-b">
             <h2 className="text-xl font-bold">Admin Panel</h2>
-            <p className="text-sm text-gray-500">{user.email}</p>
+            <p className="text-sm text-gray-500">{currentUser.email}</p>
           </div>
           <nav className="p-4 space-y-1">
             {adminLinks.map((link) => {
