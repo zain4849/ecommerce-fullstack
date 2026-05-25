@@ -61,7 +61,7 @@ A production-ready e-commerce web application built with **Next.js 15**, **Expre
 │   ├── lib/                    # API client, utilities, Stripe config
 │   └── types/                  # TypeScript type definitions
 │
-└── diagrams/                   # Architecture & sequence diagrams (Mermaid)
+└── diagrams/                   # Architecture & sequence diagrams (PNG)
 ```
 
 ## Getting Started
@@ -269,8 +269,49 @@ Keep `ALLOW_VERCEL_PREVIEWS=true` if you want Vercel preview deployments to work
 
 ## Architecture
 
-- Backend route/middleware flow and data lifecycle diagrams are in [diagrams/](diagrams).
-- Use these during interviews to explain request flow, auth boundaries, and checkout/webhook state transitions.
+### High-Level System Architecture
+
+Next.js frontend on Vercel, Express API on Railway, PostgreSQL via Prisma, and Stripe for payments — with JWT auth, rate limiting, and webhook-driven order confirmation.
+
+![High-Level System Architecture](diagrams/High-Level-System-Architecture.png)
+
+### Frontend Architecture
+
+App Router pages, Redux Toolkit for auth/cart state, React Query for server-state hydration, and a shared API client with cookie-based JWT handling.
+
+![Frontend Architecture](diagrams/Frontend%20Architecture.png)
+
+### Data Model
+
+Entity-relationship diagram derived from the Prisma schema — users, products, carts, order items, and payment status fields.
+
+![Data Model (ERD from Prisma schema)](diagrams/Data%20Model%20(ERD%20from%20Prisma%20schema).png)
+
+### Key Request Flows
+
+#### Login — cookie + Redux + React Query hydration
+
+JWT issued by the API, stored in an httpOnly cookie, synced to Redux for UI auth state, and hydrated into React Query for protected data fetching.
+
+![Login sequence](diagrams/Sequence%20-%20Login%20(cookie%20+%20Redux%20+%20RQ%20hydration).png)
+
+#### Add to Cart — optimistic update with rollback
+
+The UI updates immediately; if the API call fails, the previous cart state is restored.
+
+![Add to Cart sequence](diagrams/Sequence%20-%20Add%20to%20Cart%20(optimistic%20update%20+%20rollback).png)
+
+#### Checkout & Payment — PaymentIntent + webhook confirmation
+
+Order created server-side, Stripe PaymentIntent returned to the client, payment confirmed via Stripe Elements, and order status finalized asynchronously by the webhook handler.
+
+![Checkout & Payment sequence](diagrams/Sequence%20-%20Checkout%20&%20Payment%20(PaymentIntent%20+%20Webhook).png)
+
+#### Admin Analytics — RBAC + parallel queries
+
+Admin-only routes guarded by role middleware; dashboard aggregates revenue and top products with parallel Prisma queries.
+
+![Admin Analytics sequence](diagrams/Sequence%20-%20Admin%20Analytics%20(RBAC%20+%20parallel%20queries).png)
 
 ## License
 
