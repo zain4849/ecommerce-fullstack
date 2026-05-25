@@ -119,7 +119,7 @@ const OrdersPage = () => {
           <h1 className="text-2xl md:text-3xl font-black">My Orders</h1>
           <p className="text-sm text-muted-foreground mt-1">
             {orders.length} order{orders.length !== 1 ? "s" : ""} placed
-          </p>
+          </p>  
         </div>
       </div>
 

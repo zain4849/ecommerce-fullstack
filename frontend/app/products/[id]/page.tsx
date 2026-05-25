@@ -16,7 +16,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 
   try {
     const [product, productList] = await Promise.all([
-      fetchProductByIdServer(id, { next: { revalidate } }),
+      fetchProductByIdServer(id, { next: { revalidate } }), // next: { revalidate } is used to revalidate the page every 120 seconds
       fetchProductsServer({ limit: 12 }, { next: { revalidate } }),
     ]);
 
