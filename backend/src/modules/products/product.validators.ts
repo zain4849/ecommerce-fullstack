@@ -1,6 +1,6 @@
 import Joi from "joi";
 
-const cuidSchema = Joi.string().pattern(/^c[a-z0-9]{24}$/).required();
+const cuidSchema = Joi.string().pattern(/^c[a-z0-9]{24}$/).required(); // cuid is a 24 character string starting with c and containing only lowercase letters and numbers
 
 export const productIdParamSchema = Joi.object({
   id: cuidSchema,

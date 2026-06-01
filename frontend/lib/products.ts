@@ -28,11 +28,11 @@ export interface ProductFilters {
 export async function fetchProducts(
   filters: ProductFilters = {},
 ): Promise<ProductsResponse> {
-  const params = new URLSearchParams();
+  const params = new URLSearchParams(); // has its own custom toString method
   if (filters.q) params.set("q", filters.q);
   if (filters.category) params.set("category", filters.category);
   if (filters.brand) params.set("brand", filters.brand);
-  if (filters.minPrice !== undefined)
+  if (filters.minPrice !== undefined) // if we did if (filters.minPrice) then 0 would be treated as false and not set
     params.set("minPrice", String(filters.minPrice));
   if (filters.maxPrice !== undefined)
     params.set("maxPrice", String(filters.maxPrice));
@@ -44,7 +44,7 @@ export async function fetchProducts(
   if (filters.page) params.set("page", String(filters.page));
   if (filters.limit) params.set("limit", String(filters.limit));
   if (filters.featured) params.set("featured", "true");
-  const res = await api.get(`/products?${params.toString()}`);
+  const res = await api.get(`/products?${params.toString()}`); // before toString, params is an object
   return res.data;
 }
 

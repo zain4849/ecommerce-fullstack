@@ -123,7 +123,7 @@ function ProductListContent() { // This is the main component that fetches the p
     setCurrentPage(1);
   }, [categoryFromUrl, searchFromUrl, brandFromUrl]);
 
-  const loadProducts = useCallback(async () => {
+  const loadProducts = useCallback(async () => { // Every change to filters or sortBy or currentPage will trigger this function
     setLoading(true);
     try {
       const res: ProductsResponse = await fetchProducts({
@@ -135,7 +135,7 @@ function ProductListContent() { // This is the main component that fetches the p
           filters.priceRange[1] < 10000 ? filters.priceRange[1] : undefined,
         minRating: filters.minRating > 0 ? filters.minRating : undefined,
         inStock: filters.inStock,
-        sort: sortBy !== "newest" ? sortBy : undefined,
+        sort: sortBy !== "newest" ? sortBy : undefined, // conditional needed to add undefined
         page: currentPage,
         limit: 12,
       });
@@ -172,7 +172,7 @@ function ProductListContent() { // This is the main component that fetches the p
     </div>
   );
 
-  const sortOptions = [
+  const sortOptions = [ // label is what user sees in dropdown, value is what is sent to the backend
     { label: "Newest", value: "newest" },
     { label: "Price: Low to High", value: "price-low" },
     { label: "Price: High to Low", value: "price-high" },
@@ -181,27 +181,27 @@ function ProductListContent() { // This is the main component that fetches the p
 
   const activeChips = useMemo(() => {
     const chips: { label: string; clear: () => void }[] = [];
-    if (filters.category)
+    if (filters.category) // if category it will be first chip
       chips.push({
         label: `Category: ${filters.category}`,
         clear: () => setFilters((f) => ({ ...f, category: "" })),
       });
-    if (filters.brand)
+    if (filters.brand) // if brand it will be second chip
       chips.push({
         label: `Brand: ${filters.brand}`,
         clear: () => setFilters((f) => ({ ...f, brand: "" })),
       });
-    if (filters.minRating > 0)
+    if (filters.minRating > 0) // if minimum rating it will be third chip
       chips.push({
         label: `${filters.minRating}+ Stars`,
         clear: () => setFilters((f) => ({ ...f, minRating: 0 })),
       });
-    if (filters.inStock !== null)
+    if (filters.inStock !== null) // if availability it will be fourth chip
       chips.push({
         label: filters.inStock ? "In Stock" : "Out of Stock",
         clear: () => setFilters((f) => ({ ...f, inStock: null })),
       });
-    if (filters.priceRange[0] > 0 || filters.priceRange[1] < 10000)
+    if (filters.priceRange[0] > 0 || filters.priceRange[1] < 10000) // if price range it will be fifth chip
       chips.push({
         label: `AED ${filters.priceRange[0]} – ${filters.priceRange[1]}`,
         clear: () => setFilters((f) => ({ ...f, priceRange: [0, 10000] })),
@@ -214,13 +214,15 @@ function ProductListContent() { // This is the main component that fetches the p
     setCurrentPage(1);
   };
 
-  const filterPanel = (
+  const filterPanel = ( // This is the filter panel that is displayed in the sidebar
     <div className="bg-card rounded-2xl border border-border/60 p-5 md:p-6 space-y-6 lg:sticky lg:top-24">
       <div className="flex items-center justify-between">
         <h2 className="text-base font-bold flex items-center gap-2">
           <SlidersHorizontal className="size-4" />
           Filters
         </h2>
+
+        {/* Reset all */}
         <button
           onClick={resetFilters}
           className="text-xs font-semibold text-primary hover:text-accent cursor-pointer"
@@ -229,6 +231,7 @@ function ProductListContent() { // This is the main component that fetches the p
         </button>
       </div>
 
+      {/* Search */}
       <div>
         <label className="block text-xs font-semibold mb-2 uppercase tracking-wide text-muted-foreground">
           Search
@@ -247,6 +250,7 @@ function ProductListContent() { // This is the main component that fetches the p
         </div>
       </div>
 
+      {/* Category */}
       <div>
         <label className="block text-xs font-semibold mb-2 uppercase tracking-wide text-muted-foreground">
           Category
@@ -268,6 +272,7 @@ function ProductListContent() { // This is the main component that fetches the p
         </select>
       </div>
 
+      {/* Brand */}
       <div>
         <label className="block text-xs font-semibold mb-2 uppercase tracking-wide text-muted-foreground">
           Brand
@@ -289,6 +294,7 @@ function ProductListContent() { // This is the main component that fetches the p
         </select>
       </div>
 
+      {/* Price Range */}
       <div>
         <label className="block text-xs font-semibold mb-2 uppercase tracking-wide text-muted-foreground">
           Price Range (AED)
@@ -330,6 +336,7 @@ function ProductListContent() { // This is the main component that fetches the p
         </div>
       </div>
 
+      {/* Minimum Rating */}
       <div>
         <label className="block text-xs font-semibold mb-2 uppercase tracking-wide text-muted-foreground">
           Minimum Rating

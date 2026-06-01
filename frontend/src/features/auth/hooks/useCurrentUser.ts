@@ -10,9 +10,19 @@ export function useCurrentUser() {
   const dispatch = useDispatch();
   const query = useQuery({
     queryKey: ["auth", "me"],
-    queryFn: async () => {
-      const response = await api.get("/auth/me");
-      return response.data;
+    queryFn: async () => { // always returns an object with data property and error property
+      /*
+      response.data = {
+        userData: {
+          id: "123",
+          email: "test@test.com",
+          name: "Test",
+          role: "CUSTOMER"
+        }
+      }
+      */
+      const response = await api.get("/auth/me"); // Axios response object
+      return response.data; // this becomes query.data
     },
     retry: false,
   });

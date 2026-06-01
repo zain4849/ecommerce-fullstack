@@ -74,6 +74,14 @@ export const me = async (req: Request, res: Response) => {
       where: { id: req.user!.id },
       select: { id: true, email: true, name: true, role: true },
     });
+    /*
+    user = {
+      id: "123",
+      email: "test@test.com",
+      name: "Test",
+      role: "CUSTOMER"
+    }
+    */
     if (!user) return res.status(404).json({ error: "User not found" });
     return res.json({ userData: user });
   } catch (error) {

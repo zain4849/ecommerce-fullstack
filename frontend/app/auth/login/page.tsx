@@ -24,7 +24,7 @@ function LoginContent() {
   useEffect(() => {
     const authStatus = searchParams.get("auth");
 
-    dispatch(loadFromStorage());
+    dispatch(loadFromStorage()); // login page is the only one that uses loadFromStorage
 
     if (authStatus === "google") {
       setLoading(true);
@@ -103,7 +103,8 @@ function LoginContent() {
             </span>
           </div>
         </div>
-
+        
+        {/* Google OAuth */}
         <a
           href={`${API_BASE_URL}/auth/google`}
           className="w-full flex items-center justify-center gap-3 border rounded-2xl py-4 hover:bg-gray-50 transition"
