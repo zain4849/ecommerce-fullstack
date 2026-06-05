@@ -14,6 +14,7 @@ function createPrismaClient() {
   const adapter = new PrismaPg({ connectionString });
   return new PrismaClient({
     adapter,
+    // if development mode then log query, error, warn, else if it's production mode then log error only (it gets messy, logs are shown in sentry)
     log: process.env.NODE_ENV === "development" ? ["query", "error", "warn"] : ["error"],
   });
 }
