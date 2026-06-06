@@ -13,8 +13,8 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "ZELECT — Electronics & Tech Store",
-  description: "Shop laptops, phones, cameras, gaming gear & smart home devices. Free shipping on orders over AED 200.",
+  title: "ZELECT — Demo Store (Portfolio Project)",
+  description: "Demo store for portfolio project. Features products, cart, checkout, and order tracking.",
 };
 
 export default function RootLayout({

@@ -85,7 +85,7 @@ const Footer = () => {
         </div>
         <div className=" w-full h-20 border-t text-white flex items-center gap-4">
           <h1 className="font-bold text-[1.5rem]">ZELECT</h1>
-          <p>© {currentYear} ZELECT. All rights reserved.</p>
+          <p>© {currentYear} ZELECT. Demo store for portfolio project. - not a real store</p>
         </div>
       </div>
     </footer>
